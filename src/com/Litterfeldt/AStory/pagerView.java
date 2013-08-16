@@ -11,12 +11,10 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.View;
 import com.Litterfeldt.AStory.customClasses.CoreApplication;
 import com.Litterfeldt.AStory.fragments.LibraryFragment;
 import com.Litterfeldt.AStory.fragments.PlayerFragment;
-import com.Litterfeldt.AStory.fragments.TestActivity;
 import com.Litterfeldt.AStory.services.AudioplayerService;
 
 public class pagerView extends FragmentActivity {
@@ -24,12 +22,10 @@ public class pagerView extends FragmentActivity {
     public ViewPager mPager;
     public AudioplayerService apService;
     public boolean serviceBound = false;
-    private Intent serviceIntent;
     public boolean updatePicture = false;
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            Log.e("SERVICE","########audioservice started");
             apService = ((AudioplayerService.AudioplayerBinder)service).getService();
             if(!((CoreApplication)getApplication()).serviceStarted){
             ((CoreApplication)getApplication()).serviceStarted=true;
@@ -38,7 +34,6 @@ public class pagerView extends FragmentActivity {
         @Override
         public void onServiceDisconnected(ComponentName name) {
             apService = null;
-            Log.e("SERVICE","########audioservice stopped");
         }
     };
     private void startup(){
@@ -68,13 +63,8 @@ public class pagerView extends FragmentActivity {
 
     @Override
     protected void onPause() {
-        if(!apService.mp.isPlaying){
-            doUnbindService();
-            apService.stopThisServiceNow();
-            super.onStop();}
-        else {
         doUnbindService();
-        super.onStop();}
+        super.onPause();
     }
     @Override
     protected void onResume(){
@@ -97,7 +87,7 @@ public class pagerView extends FragmentActivity {
     }
     void doBindService(){
         if(!serviceBound){
-            serviceIntent = new Intent(pagerView.this, AudioplayerService.class);
+            Intent serviceIntent = new Intent(pagerView.this, AudioplayerService.class);
             bindService(serviceIntent,serviceConnection,Context.BIND_ABOVE_CLIENT);
             serviceBound=true;
         }
@@ -125,7 +115,7 @@ public class pagerView extends FragmentActivity {
                 case 1:
                     return new LibraryFragment();
                 case 2:
-                    return new TestActivity();
+                    return new LibraryFragment();
                 default:
                     return null;
             }
@@ -135,6 +125,7 @@ public class pagerView extends FragmentActivity {
         public int getCount() {
             return NUMBER_OF_PAGES;
         }
+        @SuppressWarnings("deprecation")
         @Override
         public void destroyItem(View arg0, int arg1, Object arg2){
             ((ViewPager) arg0).removeView((View) arg2);

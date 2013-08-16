@@ -20,7 +20,7 @@ import com.Litterfeldt.AStory.services.AudioplayerService;
 import java.util.ArrayList;
 
 
-public class CustomListAdapter extends BaseAdapter {
+public class CustomListAdapterVTwo extends BaseAdapter {
 
     public Activity activity;
     private ArrayList<ArrayList<String>> data;
@@ -32,7 +32,7 @@ public class CustomListAdapter extends BaseAdapter {
 
 
 
-    public CustomListAdapter(pagerView a, ArrayList<ArrayList<String>> d){
+    public CustomListAdapterVTwo(pagerView a, ArrayList<ArrayList<String>> d){
         activity = a;
         data = d;
         inflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -57,13 +57,30 @@ public class CustomListAdapter extends BaseAdapter {
     public long getItemId(int position) {
         return position;
     }
+    @Override
+    public boolean isEnabled(int position)
+    {
+        if(position==0) {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View vi = convertView;
-        if(convertView==null){
-            vi = inflater.inflate(R.layout.list_row,null);
+        View vi;
+        if(position==0){
+            vi = inflater.inflate(R.layout.library_header_listrow,null);
+            TextView head = (TextView)vi.findViewById(R.id.libraryHeader);
+            head.setTypeface(font);
+            vi.setEnabled(false);
+            vi.setClickable(false);
         }
+        else{
+        vi = inflater.inflate(R.layout.list_row_two,null);
         //All the graphical components
         TextView header = (TextView)vi.findViewById(R.id.summary);
         TextView Author = (TextView)vi.findViewById(R.id.author);
@@ -71,9 +88,9 @@ public class CustomListAdapter extends BaseAdapter {
 
         //-----------------------------------------------------------------------------------
         ArrayList<String> book;
-        book=data.get(position);
+        book=data.get(position-1);
         try{
-        byte [] b = core.sqlConnector.getPicture(book.get(0));
+            byte [] b = core.sqlConnector.getPicture(book.get(0));
             //noinspection deprecation
             img.setImageDrawable(new BitmapDrawable(BitmapFactory.decodeByteArray(b,0,b.length)));
         }
@@ -82,8 +99,10 @@ public class CustomListAdapter extends BaseAdapter {
         Author.setText(book.get(1));
         header.setTypeface(font);
         Author.setTypeface(font);
+        }
         return vi;
 
 
     }
+
 }

@@ -1,7 +1,6 @@
 package com.Litterfeldt.AStory.customClasses;
 
 import android.media.MediaPlayer;
-import com.Litterfeldt.AStory.R;
 import com.Litterfeldt.AStory.pagerView;
 
 import java.io.IOException;
@@ -12,12 +11,12 @@ public class CustomMediaPlayer {
     public String datasource;
     public String currentBookname;
     public int currentChapterIndex;
-    public boolean isInit = true;
+    public boolean mpHasInitialized = true;
     public boolean isPlaying = false;
-    public boolean IMGPAUSE= false;
-    public boolean startedPlaying = false;
+    public boolean pauseIMGisSet = false;
+    public boolean playerStartedPlayingABook = false;
     public boolean backgroundIsSet = false;
-    public boolean currentbook = false;
+    public boolean hasCurrentBook = false;
 
 
     public CustomMediaPlayer(){
@@ -39,32 +38,33 @@ public class CustomMediaPlayer {
     public void start(){
         mp.start();
         isPlaying=true;
-        isInit = true;
-        currentbook = true;
+        mpHasInitialized = true;
+        hasCurrentBook = true;
     }
     public void pause(){
         mp.pause();
         isPlaying = false;
+
     }
     public void reset(){
         mp.reset();
         isPlaying=false;
-        currentbook = false;
+        hasCurrentBook = false;
     }
     public void setDataSource(String dataSource) throws IOException {
         try{
-        mp.setDataSource(dataSource);}catch (Exception e){}
+        mp.setDataSource(dataSource);}catch (Exception ignored){}
     }
     public void prepare() throws IOException {
         try{
         mp.prepare();
-        }catch (Exception e){}
+        }catch (Exception ignored){}
     }
     public void stop(){
         mp.stop();
         isPlaying=false;
-        isInit=false;
-        currentbook = false;
+        mpHasInitialized =false;
+        hasCurrentBook = false;
     }
     public void playBook(String Bookname,int Chapterindex, pagerView activity){
         try{
@@ -77,11 +77,11 @@ public class CustomMediaPlayer {
             setDataSource(datasource);
             prepare();
             start();
-            startedPlaying =true;
-            currentbook = true;
+            playerStartedPlayingABook =true;
+            hasCurrentBook = true;
             isPlaying=true;
             backgroundIsSet = false;
-            IMGPAUSE = true;
+            pauseIMGisSet = true;
 
         } catch (IOException e) {e.printStackTrace();}
     }

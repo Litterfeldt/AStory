@@ -16,22 +16,17 @@
             />
 
 
-    <GridView
+    <com.handmark.pulltorefresh.library.PullToRefreshGridView
             android:layout_height="fill_parent"
             android:layout_width="fill_parent"
-            android:id="@+id/projectList"
+            android:id="@+id/pull_to_refresh_listview"
             android:numColumns="2"
             android:stretchMode="columnWidth"
             android:layout_alignParentTop="true"
+            ptrAnimationStyle="flip"
 
 
             />
-    <Button
-            android:id="@+id/refreshbutton"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="refresh"
-            android:layout_alignParentBottom="true"
-            />
+
 
 </RelativeLayout>

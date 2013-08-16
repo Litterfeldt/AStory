@@ -4,18 +4,10 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:background="#000000"
-        >
-
-            <com.Litterfeldt.AStory.scrollBar.ColorPicker
-                    android:id="@+id/cseekbar"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
+        />
 
 
 
-                    ></com.Litterfeldt.AStory.scrollBar.ColorPicker>
 
 
-
-</RelativeLayout>
 

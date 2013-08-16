@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="wrap_content"
+                android:layout_height="80dp"
+                android:background="#000000"
+                android:orientation="horizontal"
+                android:paddingLeft="70dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                >
+
+
+<LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="70dp"
+    >
+
+    <LinearLayout
+            android:layout_width="70dp"
+                android:layout_height="70dp">
+
+
+            <ImageView android:id="@+id/list_image"
+                       android:layout_width="70dp"
+                       android:layout_height="70dp"
+                       android:scaleType="centerCrop"
+                       android:contentDescription=""/>
+            </LinearLayout>
+
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="70dp"
+            android:gravity="center_vertical"
+            android:paddingLeft="5dp">
+        <TextView android:id="@+id/summary"
+                  android:layout_height="wrap_content"
+                  android:layout_width="wrap_content"
+                  android:textColor="#F4F4F4"
+                  android:ems="10"
+                  android:text=""
+                  android:textAppearance="?android:attr/textAppearanceMedium"
+                  />
+        <TextView android:id="@+id/author"
+                  android:layout_below="@id/summary"
+                  android:layout_height="wrap_content"
+                  android:layout_width="wrap_content"
+                  android:textColor="#909090"
+                  android:ems="9"
+                  android:text=""
+                  android:textAppearance="?android:attr/textAppearanceSmall"
+                  android:layout_alignBottom="@id/summary"/>
+        </LinearLayout>
+
+
+
+
+
+
+</LinearLayout>
+</RelativeLayout>
