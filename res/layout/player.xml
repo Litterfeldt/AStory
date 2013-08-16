@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id ="@+id/layout1"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:background="#000000"
+        >
+    <android.widget.ImageView
+            android:id="@+id/background"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"/>
+    <android.widget.ImageView
+            android:id="@+id/overlay"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="#70000000" />
+
+
+    <LinearLayout
+            android:background="#cc000000"
+            android:layout_width="fill_parent"
+            android:layout_height="70dp"
+            android:orientation="vertical"
+            android:layout_alignParentTop="true"
+
+
+            >
+    <LinearLayout
+
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_below="@+id/timelayout"
+            android:layout_marginLeft = "10dp"
+            android:layout_marginRight="10dp"
+
+
+            >
+        <TextView
+                android:id="@+id/titleheader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:text=""
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="#f9f9f9"
+                android:textSize="20dp" />
+        <TextView
+                android:id="@+id/subheader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:text=""
+                android:textAppearance="?android:attr/textAppearanceLarge"
+
+                android:textColor="#909090"
+                android:textSize="20dp" />
+    </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_centerInParent="true"
+            android:background="#90000000"
+
+
+
+            >
+
+        <RelativeLayout
+                android:id="@+id/seeklayout"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="vertical"
+
+                android:layout_marginTop="10dp"
+
+                >
+
+
+
+            <android.widget.ProgressBar
+                    android:id="@+id/progressbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@android:style/Widget.Holo.ProgressBar.Horizontal"
+
+                    android:layout_marginLeft = "15dp"
+                    android:layout_marginRight="15dp"
+                    />
+
+            <TextView
+                    android:id="@+id/timegone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:text="00:00:00"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textColor="#ffffff"
+                    android:textSize="20dp"
+                    android:layout_below="@id/progressbar"
+                    android:layout_marginLeft = "15dp"
+                    android:layout_marginRight="15dp"
+                    />
+            <TextView
+                    android:id="@+id/timeleft"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:text="00:00:00"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textColor="#ffffff"
+                    android:textSize="20dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_below="@id/progressbar"
+                    android:layout_marginLeft = "15dp"
+                    android:layout_marginRight="15dp"
+                    />
+            <android.widget.SeekBar
+                    android:id="@+id/seekbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@android:style/Widget.Holo.ProgressBar.Horizontal"
+                    android:layout_below="@id/timegone"
+
+
+                    />
+
+
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+            android:background="#cc000000"
+            android:layout_width="fill_parent"
+            android:layout_height="70dp"
+            android:orientation="vertical"
+            android:layout_alignParentBottom="true"
+
+
+            >
+        <LinearLayout
+
+                android:layout_width="wrap_content"
+                android:layout_height="70dp"
+                android:orientation="horizontal"
+                android:layout_gravity="center"
+
+
+                >
+            <Button
+                    android:id="@+id/thirtySBack"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_margin="10dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/thirtysback"
+                    />
+            <Button
+                    android:id="@+id/LastChapter"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_margin="10dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/hardback"
+                    />
+            <Button
+                    android:id="@+id/playpause"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_margin="10dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/play"
+                    />
+            <Button
+                    android:id="@+id/nextchapter"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_margin="10dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/hardforward2"
+                    />
+            <Button
+                    android:id="@+id/thirtySForward"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_margin="10dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/thirtysforward"
+                    />
+
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+</RelativeLayout>
+

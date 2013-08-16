@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id ="@+id/layout1"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:background="#000000"
+        >
+
+            <com.Litterfeldt.AStory.scrollBar.ColorPicker
+                    android:id="@+id/cseekbar"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+
+
+
+                    ></com.Litterfeldt.AStory.scrollBar.ColorPicker>
+
+
+
+</RelativeLayout>
+
