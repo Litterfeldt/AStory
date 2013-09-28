@@ -27,13 +27,26 @@ public class CustomMediaPlayer {
 
     }
     public int getCurrentPosition(){
-        return mp.getCurrentPosition();
+        if (hasCurrentBook){
+            return mp.getCurrentPosition();
+        }
+        else {
+            return 0;
+        }
     }
     public int getDuration(){
-        return mp.getDuration();
+        if(hasCurrentBook){
+            return mp.getDuration();
+        }
+        else{
+            return 0;
+        }
+
     }
     public void seekTo(int i){
-        mp.seekTo(i);
+        if (hasCurrentBook){
+            mp.seekTo(i);
+        }
     }
     public void start(){
         mp.start();
@@ -42,14 +55,18 @@ public class CustomMediaPlayer {
         hasCurrentBook = true;
     }
     public void pause(){
-        mp.pause();
-        isPlaying = false;
+        if (hasCurrentBook){
+            mp.pause();
+            isPlaying = false;
+        }
 
     }
     public void reset(){
-        mp.reset();
-        isPlaying=false;
-        hasCurrentBook = false;
+        if (hasCurrentBook){
+            mp.reset();
+            isPlaying=false;
+            hasCurrentBook = false;
+        }
     }
     public void setDataSource(String dataSource) throws IOException {
         try{
@@ -61,10 +78,12 @@ public class CustomMediaPlayer {
         }catch (Exception ignored){}
     }
     public void stop(){
-        mp.stop();
-        isPlaying=false;
-        mpHasInitialized =false;
-        hasCurrentBook = false;
+        if (hasCurrentBook){
+            mp.stop();
+            isPlaying=false;
+            mpHasInitialized =false;
+            hasCurrentBook = false;
+        }
     }
     public void playBook(String Bookname,int Chapterindex, pagerView activity){
         try{
