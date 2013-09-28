@@ -22,7 +22,7 @@ public class CustomMediaPlayer {
     public CustomMediaPlayer(){
         mp = new MediaPlayer();
     }
-    public void setOnCompletionListener(MediaPlayer.OnCompletionListener listener){
+    public void setOnCompletionListener( MediaPlayer.OnCompletionListener listener ){
         mp.setOnCompletionListener(listener);
 
     }
@@ -50,9 +50,7 @@ public class CustomMediaPlayer {
     }
     public void start(){
         mp.start();
-        isPlaying=true;
-        mpHasInitialized = true;
-        hasCurrentBook = true;
+        isPlaying = mpHasInitialized = hasCurrentBook = true;
     }
     public void pause(){
         if (hasCurrentBook){
@@ -64,13 +62,13 @@ public class CustomMediaPlayer {
     public void reset(){
         if (hasCurrentBook){
             mp.reset();
-            isPlaying=false;
-            hasCurrentBook = false;
+            isPlaying = hasCurrentBook = false;
         }
     }
     public void setDataSource(String dataSource) throws IOException {
         try{
-        mp.setDataSource(dataSource);}catch (Exception ignored){}
+            mp.setDataSource(dataSource);
+        }catch (Exception ignored){}
     }
     public void prepare() throws IOException {
         try{
@@ -80,9 +78,7 @@ public class CustomMediaPlayer {
     public void stop(){
         if (hasCurrentBook){
             mp.stop();
-            isPlaying=false;
-            mpHasInitialized =false;
-            hasCurrentBook = false;
+            isPlaying = mpHasInitialized = hasCurrentBook = false;
         }
     }
     public void playBook(String Bookname,int Chapterindex, pagerView activity){
@@ -96,11 +92,8 @@ public class CustomMediaPlayer {
             setDataSource(datasource);
             prepare();
             start();
-            playerStartedPlayingABook =true;
-            hasCurrentBook = true;
-            isPlaying=true;
+            playerStartedPlayingABook = hasCurrentBook = isPlaying = pauseIMGisSet =  true;
             backgroundIsSet = false;
-            pauseIMGisSet = true;
 
         } catch (IOException e) {e.printStackTrace();}
     }

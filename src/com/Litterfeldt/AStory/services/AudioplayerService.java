@@ -49,7 +49,7 @@ public class AudioplayerService extends Service implements MediaPlayer.OnComplet
     }
     public void stopThisServiceNow(){
 
-        if(mp.currentbook){
+        if(mp.hasCurrentBook){
             try{
                 sqlConnector.clearCach();
                 sqlConnector.newSave(sqlConnector.getBookIDFromName(mp.currentBookname),mp.currentChapterIndex,mp.getCurrentPosition());
@@ -101,11 +101,11 @@ public class AudioplayerService extends Service implements MediaPlayer.OnComplet
             mp.setDataSource(mp.datasource);
             mp.prepare();
             mp.start();
-            mp.startedPlaying =true;
-            mp.currentbook = true;
+            mp.playerStartedPlayingABook =true;
+            mp.hasCurrentBook = true;
             mp.isPlaying=true;
             mp.backgroundIsSet = false;
-            mp.IMGPAUSE = true;
+            mp.pauseIMGisSet = true;
 
         } catch (IOException e) {e.printStackTrace();}
     }
@@ -145,13 +145,13 @@ public class AudioplayerService extends Service implements MediaPlayer.OnComplet
         try{
         if(mp.currentChapterIndex < currentBookChapterList.size()){
             playBook(mp.currentBookname, mp.currentChapterIndex + 1);
-            mp.startedPlaying = true;
-            mp.currentbook = true;
+            mp.playerStartedPlayingABook = true;
+            mp.hasCurrentBook = true;
         }
         else{
             mp.stop();
-            mp.startedPlaying = false;
-            mp.currentbook =false;
+            mp.playerStartedPlayingABook = false;
+            mp.hasCurrentBook =false;
         }}catch (Exception e){}
     }
 }

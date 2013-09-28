@@ -34,7 +34,7 @@ public class LibraryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.library, container, false);
-        list =(GridView)view.findViewById(R.id.projectList);
+        list =(GridView)view.findViewById(R.id.libraryHeader);
         ((pagerView) getActivity()).apService.getBookList();
         try{
             adapter = new CustomListAdapter(((pagerView) getActivity()) ,((pagerView) getActivity()).apService.booklist);
@@ -48,9 +48,8 @@ public class LibraryFragment extends Fragment {
 
 
         //Buttons:
-        Button refreshbutton = (Button) view.findViewById(R.id.refreshbutton);
         searchingSpinner = (ProgressBar) view.findViewById(R.id.searchSpinner);
-        refreshbutton.setOnClickListener(new View.OnClickListener() {
+        /**refreshbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 searchingSpinner.bringToFront();
@@ -83,7 +82,7 @@ public class LibraryFragment extends Fragment {
 
                     }};
             }
-        });
+        });**/
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {

@@ -15,7 +15,6 @@ import android.widget.*;
 import com.Litterfeldt.AStory.R;
 import com.Litterfeldt.AStory.customClasses.CustomMediaPlayer;
 import com.Litterfeldt.AStory.pagerView;
-import com.Litterfeldt.AStory.scrollBar.ColorPicker;
 import com.Litterfeldt.AStory.services.AudioplayerService;
 
 public class PlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeListener {
@@ -80,12 +79,14 @@ public class PlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeL
         background =(ImageView)view.findViewById(R.id.background);
         processbar = (SeekBar)view.findViewById(R.id.seekbar);
         progressBar = (ProgressBar)view.findViewById(R.id.progressbar);
+
         book.setTypeface(font);
         author.setTypeface(font);
-
         timeleft.setTypeface(font);
+        timegone.setTypeface(font);
 
         processbar.setOnSeekBarChangeListener(this);
+
         forward.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -116,7 +117,7 @@ public class PlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeL
                 findnext();
             }
         });
-        if (!((pagerView) getActivity()).apService.mp.isPlaying && !((pagerView) getActivity()).apService.mp.currentbook){
+        if (!((pagerView) getActivity()).apService.mp.isPlaying && !((pagerView) getActivity()).apService.mp.hasCurrentBook){
             playSavedState(getSaveState());
             SetBackgroundAndTitle();
             ((pagerView) getActivity()).apService.showNotification();
@@ -207,17 +208,17 @@ public class PlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeL
     //--- PLAYER CONTROLS ---
     private void pushedPlay(){
         CustomMediaPlayer mp = ((pagerView) getActivity()).apService.mp;
-        if (!mp.startedPlaying && !mp.currentbook){
+        if (!mp.playerStartedPlayingABook && !mp.hasCurrentBook){
             playSavedState(getSaveState());
             SetBackgroundAndTitle();
             ((pagerView) getActivity()).apService.showNotification();
         }
-        else if (!mp.isPlaying && mp.currentbook){
+        else if (!mp.isPlaying && mp.hasCurrentBook){
             mp.start();
             play.setBackgroundResource(R.drawable.pasue);
             ((pagerView) getActivity()).apService.showNotification();
         }
-        else if (mp.isPlaying && mp.currentbook){
+        else if (mp.isPlaying && mp.hasCurrentBook){
             mp.pause();
             play.setBackgroundResource(R.drawable.play);
             ((pagerView) getActivity()).apService.showNotification();
@@ -256,8 +257,8 @@ public class PlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeL
         }
         else{
             ((pagerView) getActivity()).apService.mp.stop();
-            ((pagerView) getActivity()).apService.mp.startedPlaying = false;
-            ((pagerView) getActivity()).apService.mp.currentbook =false;
+            ((pagerView) getActivity()).apService.mp.playerStartedPlayingABook = false;
+            ((pagerView) getActivity()).apService.mp.hasCurrentBook =false;
             play.setBackgroundResource(R.drawable.play);
         }
     }

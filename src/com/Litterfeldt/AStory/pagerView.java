@@ -101,7 +101,7 @@ public class pagerView extends FragmentActivity {
 
     //########################################################## PRIVATE STATIC CLASSES ##############################################
     public static class MyFragmentPagerAdapter extends FragmentPagerAdapter {
-        public static final int NUMBER_OF_PAGES = 3;
+        public static final int NUMBER_OF_PAGES = 1;
 
         public MyFragmentPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -112,10 +112,10 @@ public class pagerView extends FragmentActivity {
             switch (position){
                 case 0:
                     return new PlayerFragment();
-                case 1:
+                /**case 1:
                     return new LibraryFragment();
                 case 2:
-                    return new LibraryFragment();
+                    return new LibraryFragment();**/
                 default:
                     return null;
             }
