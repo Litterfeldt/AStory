@@ -16,6 +16,7 @@ import com.Litterfeldt.AStory.R;
 import com.Litterfeldt.AStory.customClasses.CustomMediaPlayer;
 import com.Litterfeldt.AStory.pagerView;
 import com.Litterfeldt.AStory.services.AudioplayerService;
+import java.util.ArrayList;
 
 public class PlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeListener {
     private TextView book;
@@ -37,48 +38,40 @@ public class PlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeL
     private Handler mHandler;
 
 
-
     @Override
-    public void onCreate(Bundle savedInstanceState){
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-
     }
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
     }
     @Override
-    public void onPause(){
-        try{
+    public void onPause() {
+        try {
             setSaveState();
-        }
-        catch (NullPointerException n){
-            Log.e("ERROR/PLAYERFRAGMENT","Couldn't make a save file from the playerfragment's onPause() method");
+        } catch (NullPointerException n) {
+            Log.e("ERROR/PLAYERFRAGMENT", "Couldn't make a save file from the playerfragment's onPause() method");
         }
         super.onPause();
-
-
-
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.player, container, false);
         font = Typeface.createFromAsset(((pagerView) getActivity()).getAssets(), "font.ttf");
-        book = (TextView)view.findViewById(R.id.titleheader);
-        author = (TextView)view.findViewById(R.id.subheader);
-        timeleft= (TextView)view.findViewById(R.id.timeleft);
-        timegone= (TextView)view.findViewById(R.id.timegone);
+        book = (TextView) view.findViewById(R.id.titleheader);
+        author = (TextView) view.findViewById(R.id.subheader);
+        timeleft = (TextView) view.findViewById(R.id.timeleft);
+        timegone = (TextView) view.findViewById(R.id.timegone);
 
-        back = (TextView)view.findViewById(R.id.thirtySBack);
-        forward = (TextView)view.findViewById(R.id.thirtySForward);
-        fback = (TextView)view.findViewById(R.id.LastChapter);
-        fforward = (TextView)view.findViewById(R.id.nextchapter);
-        play = (TextView)view.findViewById(R.id.playpause);
-        background =(ImageView)view.findViewById(R.id.background);
-        processbar = (SeekBar)view.findViewById(R.id.seekbar);
-        progressBar = (ProgressBar)view.findViewById(R.id.progressbar);
+        back = (TextView) view.findViewById(R.id.thirtySBack);
+        forward = (TextView) view.findViewById(R.id.thirtySForward);
+        fback = (TextView) view.findViewById(R.id.LastChapter);
+        fforward = (TextView) view.findViewById(R.id.nextchapter);
+        play = (TextView) view.findViewById(R.id.playpause);
+        background = (ImageView) view.findViewById(R.id.background);
+        processbar = (SeekBar) view.findViewById(R.id.seekbar);
+        progressBar = (ProgressBar) view.findViewById(R.id.progressbar);
 
         book.setTypeface(font);
         author.setTypeface(font);
@@ -117,115 +110,116 @@ public class PlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeL
                 findnext();
             }
         });
-        if (!((pagerView) getActivity()).apService.mp.isPlaying && !((pagerView) getActivity()).apService.mp.hasCurrentBook){
+
+        if (!((pagerView) getActivity()).apService.mp.isPlaying && !hasBookPlaying()) {
             playSavedState(getSaveState());
             SetBackgroundAndTitle();
             ((pagerView) getActivity()).apService.showNotification();
 
+        } else {
+            SetBackgroundAndTitle();
         }
-        else {SetBackgroundAndTitle();}
         mHandler = new Handler();
         mUpdateTimeTask = new Runnable() {
             CustomMediaPlayer mp = ((pagerView) getActivity()).apService.mp;
+
             public void run() {
-                long totalDuration = mp.getDuration();
-                long currentDuration = mp.getCurrentPosition();
+                if (hasBookPlaying()){
 
-                // Displaying Total Duration time
-                //songTotalDurationLabel.setText(""+utils.milliSecondsToTimer(totalDuration));
+                    long totalDuration = mp.getDuration();
+                    long currentDuration = mp.getCurrentPosition();
 
-                // Displaying time completed playing
-                timeleft.setText(""+getTimeString(totalDuration-currentDuration));
-                timegone.setText(""+getTimeString(currentDuration));
-                // Updating progress bar
-                int progress = (int)(getProgressPercentage(currentDuration, totalDuration));
-                //Log.d("Progress", ""+progress);
-                //processbar.setProgress(progress);
-                //TODO change so that one shows chapter the other book progress
-                processbar.setMax((int)totalDuration);
-                processbar.setProgress((int)currentDuration);
-                progressBar.setMax((int)totalDuration);
-                progressBar.setProgress((int)currentDuration);
+                    // Displaying time completed playing
+                    timeleft.setText("" + getTimeString(totalDuration - currentDuration));
+                    timegone.setText("" + getTimeString(currentDuration));
+                    // Updating progress bar
+                    int progress = (int) (getProgressPercentage(currentDuration, totalDuration));
+                    //processbar.setProgress(progress);
+                    //TODO change so that one shows chapter the other book progress
+                    processbar.setMax((int) totalDuration);
+                    processbar.setProgress((int) currentDuration);
+                    progressBar.setMax((int) totalDuration);
+                    progressBar.setProgress((int) currentDuration);
 
-                if(((pagerView) getActivity()).updatePicture){
-                    SetBackgroundAndTitle();
-                    play.setBackgroundResource(R.drawable.pasue);
-                    ((pagerView) getActivity()).updatePicture=false;
+                    if (((pagerView) getActivity()).updatePicture) {
+                        SetBackgroundAndTitle();
+                        play.setBackgroundResource(R.drawable.pasue);
+                        ((pagerView) getActivity()).updatePicture = false;
+                    }
+                    showPlayerControls();
+
+                    // Running this thread after 500 milliseconds
+                    mHandler.postDelayed(this, 500);
+                }else{
+                    book.setText("Swipe Right");
+                    author.setText("to choose a book");
+                    hidePlayerControls();
+                    mHandler.postDelayed(this, 2000);
                 }
-
-                // Running this thread after 100 milliseconds
-                mHandler.postDelayed(this, 500);
             }
         };
-        //processbar.setProgress(0);
-        //processbar.setMax(100);
-        // ################### EXPERIMENTAL #########################################
-
-        //############################################################################
-
-
-
         updateProgressBar();
-
-
         return view;
     }
 
     //--- SAVE STATE CODE ---
-    private void setSaveState(){
-        if(((pagerView) getActivity()).apService.mp.isPlaying){
-            try{
+    private void setSaveState() {
+        if (((pagerView) getActivity()).apService.mp.isPlaying) {
+            try {
                 ((pagerView) getActivity()).apService.sqlConnector.clearCach();
                 ((pagerView) getActivity()).apService.sqlConnector.newSave(((pagerView) getActivity())
                         .apService.sqlConnector.getBookIDFromName
                                 (((pagerView) getActivity()).apService.mp.currentBookname)
-                                ,((pagerView) getActivity()).apService.mp.currentChapterIndex
-                        ,((pagerView) getActivity()).apService.mp.getCurrentPosition());
-                Log.w("SQL/SAVE","Made save!");
-            }
-            catch (Exception e){
-                Log.w("SQL/SAVE","Couldnt make save");
+                        , ((pagerView) getActivity()).apService.mp.currentChapterIndex
+                        , ((pagerView) getActivity()).apService.mp.getCurrentPosition());
+                Log.i("SQL/SAVE", "Made save!");
+            } catch (Exception e) {
+                Log.i("SQL/SAVE", "Couldnt make save");
             }
         }
 
     }
-    private int[] getSaveState(){
-            try{return ((pagerView) getActivity()).apService.sqlConnector.getSave();}
-            catch (Exception e){Log.w("SQL/SAVE","Couldnt make save");return null;}
+    private int[] getSaveState() {
+        try {
+            return ((pagerView) getActivity()).apService.sqlConnector.getSave();
+        } catch (Exception e) {
+            Log.w("SQL/SAVE", "Couldnt make save");
+            return null;
+        }
     }
-    private void playSavedState(int[] i){
-        if(i == null){return;}
+    private void playSavedState(int[] i) {
+        if (i == null) {
+            return;
+        }
         AudioplayerService service = ((pagerView) getActivity()).apService;
         String booknm = service.sqlConnector.getBookNameFromID(i[0]);
         int currentChapter = i[1];
         int currentPos = i[2];
-        service.playBook(booknm,currentChapter);
+        service.playBook(booknm, currentChapter);
         service.mp.seekTo(currentPos);
         play.setBackgroundResource(R.drawable.pasue);
 
     }
 
     //--- PLAYER CONTROLS ---
-    private void pushedPlay(){
+    private void pushedPlay() {
         CustomMediaPlayer mp = ((pagerView) getActivity()).apService.mp;
-        if (!mp.playerStartedPlayingABook && !mp.hasCurrentBook){
+        if (!mp.playerStartedPlayingABook && !mp.hasCurrentBook && getSaveState() != null ) {
             playSavedState(getSaveState());
             SetBackgroundAndTitle();
             ((pagerView) getActivity()).apService.showNotification();
-        }
-        else if (!mp.isPlaying && mp.hasCurrentBook){
+        } else if (!mp.isPlaying && mp.hasCurrentBook) {
             mp.start();
             play.setBackgroundResource(R.drawable.pasue);
             ((pagerView) getActivity()).apService.showNotification();
-        }
-        else if (mp.isPlaying && mp.hasCurrentBook){
+        } else if (mp.isPlaying && mp.hasCurrentBook) {
             mp.pause();
             play.setBackgroundResource(R.drawable.play);
             ((pagerView) getActivity()).apService.showNotification();
             setSaveState();
         }
     }
-    private void pushedShortBackSkipp(int skipp){
+    private void pushedShortBackSkipp(int skipp) {
         try {
             int currentpos = ((pagerView) getActivity()).apService.mp.getCurrentPosition();
             if (currentpos - skipp >= ((pagerView) getActivity()).apService.mp.getDuration()) {
@@ -237,7 +231,7 @@ public class PlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeL
             Log.e("PLAYERBACKEXCEPTION", e.toString());
         }
     }
-    private void pushedShortForwardSkipp(int skipp){
+    private void pushedShortForwardSkipp(int skipp) {
         try {
             int currentpos = ((pagerView) getActivity()).apService.mp.getCurrentPosition();
             if (currentpos + skipp <= ((pagerView) getActivity()).apService.mp.getDuration()) {
@@ -249,32 +243,49 @@ public class PlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeL
             Log.e("PLAYERFORWARDEXCEPTION", e.toString());
         }
     }
-    private void findnext(){
-        if(((pagerView) getActivity()).apService.mp.currentChapterIndex < ((pagerView) getActivity()).apService.currentBookChapterList.size()){
-            ((pagerView) getActivity()).apService.mp.playBook(((pagerView) getActivity()).apService.mp.currentBookname, ((pagerView) getActivity()).apService.mp.currentChapterIndex + 1, ((pagerView) getActivity()));
-            SetBackgroundAndTitle();
 
-        }
-        else{
-            ((pagerView) getActivity()).apService.mp.stop();
-            ((pagerView) getActivity()).apService.mp.playerStartedPlayingABook = false;
-            ((pagerView) getActivity()).apService.mp.hasCurrentBook =false;
-            play.setBackgroundResource(R.drawable.play);
+    private void findnext() {
+        if(hasBookPlaying()){
+            if (currentChapterIndex() < chapterArraySize()) {
+                playChapter(currentChapterIndex() + 1);
+                SetBackgroundAndTitle();
+
+            } else {
+             stopMediaPlayer();
+                setPlayerHasNoBook();
+                play.setBackgroundResource(R.drawable.play);
+            }
         }
     }
-    private void findprev(){
-        if(((pagerView) getActivity()).apService.mp.currentChapterIndex > 0 ){((pagerView) getActivity()).apService.mp.playBook(((pagerView) getActivity()).apService.mp.currentBookname, ((pagerView) getActivity()).apService.mp.currentChapterIndex - 1,((pagerView) getActivity()));SetBackgroundAndTitle();
-        }
-        else{((pagerView) getActivity()).apService.mp.seekTo(0);SetBackgroundAndTitle();
+    private void findprev() {
+        if (hasBookPlaying()){
+            if (currentChapterIndex() > 0) {
+                playChapter(currentChapterIndex() - 1);
+                SetBackgroundAndTitle();
+            } else {
+                seekTo(0);
+            }
         }
     }
 
     //--- UI HELPER METHODS ---
+    private void hidePlayerControls(){
+        processbar.setVisibility(View.GONE);
+        progressBar.setVisibility(View.GONE);
+        timeleft.setVisibility(View.GONE);
+        timegone.setVisibility(View.GONE);
+    }
+    private void showPlayerControls(){
+        processbar.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
+        timeleft.setVisibility(View.VISIBLE);
+        timegone.setVisibility(View.VISIBLE);
+    }
     private String getTimeString(long millis) {
         StringBuilder buf = new StringBuilder();
-        long hours = millis / (1000*60*60);
-        long minutes = ( millis % (1000*60*60) ) / (1000*60);
-        long seconds = ( ( millis % (1000*60*60) ) % (1000*60) ) / 1000;
+        long hours = millis / (1000 * 60 * 60);
+        long minutes = (millis % (1000 * 60 * 60)) / (1000 * 60);
+        long seconds = ((millis % (1000 * 60 * 60)) % (1000 * 60)) / 1000;
         buf
                 .append(String.format("%02d", hours))
                 .append(":")
@@ -284,37 +295,32 @@ public class PlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeL
         return buf.toString();
     }
     private void SetBackgroundAndTitle() {
-        try{
-            byte [] b = ((pagerView) getActivity()).apService.sqlConnector.getPicture(((pagerView) getActivity()).apService.currentBookChapterList.get(0).get(0));
-            background.setImageDrawable(new BitmapDrawable(BitmapFactory.decodeByteArray(b, 0, b.length)));
-            book.setText(((pagerView) getActivity()).apService.currentBookChapterList.get(0).get(0).trim());
-            author.setText(((pagerView) getActivity()).apService.currentBookChapterList.get(0).get(1).trim());
+        if (hasBookPlaying()) {
+            try {
+                byte[] b = getCurrentBackgroundPicture();
+                background.setImageDrawable(new BitmapDrawable(BitmapFactory.decodeByteArray(b, 0, b.length)));
+                book.setText(currentBookName().trim());
+                author.setText(currentAuthorName().trim());
+            } catch (Exception e) {
+                //Log.e("DEV","Couldnt extract image: " +e.toString());
+            }
         }
-        catch (Exception e){
-            //Log.e("DEV","Couldnt extract image: " +e.toString());
-        }
-
     }
-    public int getProgressPercentage(long currentDuration, long totalDuration){
+    public int getProgressPercentage(long currentDuration, long totalDuration) {
         Double percentage = (double) 0;
 
         long currentSeconds = (int) (currentDuration / 1000);
         long totalSeconds = (int) (totalDuration / 1000);
 
         // calculating percentage
-        percentage =(((double)currentSeconds)/totalSeconds)*100;
+        percentage = (((double) currentSeconds) / totalSeconds) * 100;
 
         // return percentage
         return percentage.intValue();
     }
-
-
     @Override
     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-        if(b){
-            ((pagerView) getActivity()).apService.mp.seekTo(i);
-
-        }
+        if (b) { seekTo(i); }
     }
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
@@ -330,13 +336,49 @@ public class PlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeL
     public int progressToTimer(int progress, int totalDuration) {
         int currentDuration = 0;
         totalDuration = (int) (totalDuration / 1000);
-        currentDuration = (int) ((((double)progress) / 100) * totalDuration);
+        currentDuration = (int) ((((double) progress) / 100) * totalDuration);
 
         // return current duration in milliseconds
         return currentDuration * 1000;
     }
 
-
+    //Service-Glue goes here
+    private void seekTo(int i) {
+        if (hasBookPlaying()) { ((pagerView) getActivity()).apService.mp.seekTo(i); }
+    }
+    private byte[] getCurrentBackgroundPicture() {
+        return ((pagerView) getActivity()).apService.sqlConnector.getPicture(currentBookName());
+    }
+    private String currentBookName() {
+        return currentBookChapterList().get(0).get(0);
+    }
+    private String currentAuthorName() {
+        return currentBookChapterList().get(0).get(1);
+    }
+    private ArrayList<ArrayList<String>> currentBookChapterList() {
+        return ((pagerView) getActivity()).apService.currentBookChapterList;
+    }
+    private boolean isEmptyBookChapterList() {
+        return currentBookChapterList().isEmpty();
+    }
+    private boolean hasBookPlaying() {
+        return ((pagerView) getActivity()).apService.mp.hasCurrentBook;
+    }
+    private int currentChapterIndex(){
+        return ((pagerView) getActivity()).apService.mp.currentChapterIndex;
+    }
+    private int chapterArraySize(){
+        return ((pagerView) getActivity()).apService.currentBookChapterList.size();
+    }
+    private void playChapter(int chapterIndex){
+        if(hasBookPlaying()) { ((pagerView) getActivity()).apService.mp.playBook(currentBookName(),chapterIndex,((pagerView) getActivity())); }
+    }
+    private void stopMediaPlayer(){
+        ((pagerView) getActivity()).apService.mp.stop();
+    }
+    private void setPlayerHasNoBook(){
+        ((pagerView) getActivity()).apService.mp.playerStartedPlayingABook = false;
+    }
 
 
 }
