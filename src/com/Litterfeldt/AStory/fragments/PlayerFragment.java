@@ -344,41 +344,68 @@ public class PlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeL
 
     //Service-Glue goes here
     private void seekTo(int i) {
-        if (hasBookPlaying()) { ((pagerView) getActivity()).apService.mp.seekTo(i); }
+        if(getService() != null){
+            if (hasBookPlaying()) { getService().mp.seekTo(i); }
+        }
     }
     private byte[] getCurrentBackgroundPicture() {
-        return ((pagerView) getActivity()).apService.sqlConnector.getPicture(currentBookName());
+        if(getService() != null){
+            return getService().sqlConnector.getPicture(currentBookName());
+        } return null;
     }
     private String currentBookName() {
-        return currentBookChapterList().get(0).get(0);
+        if(getService() != null){
+            return currentBookChapterList().get(0).get(0);
+        } return null;
     }
     private String currentAuthorName() {
-        return currentBookChapterList().get(0).get(1);
+        if(getService() != null){
+            return currentBookChapterList().get(0).get(1);
+        } return null;
     }
     private ArrayList<ArrayList<String>> currentBookChapterList() {
-        return ((pagerView) getActivity()).apService.currentBookChapterList;
+        if(getService() != null){
+            return getService().currentBookChapterList;
+        } return null;
     }
     private boolean isEmptyBookChapterList() {
+        if(getService() != null){
         return currentBookChapterList().isEmpty();
+        } return true;
     }
     private boolean hasBookPlaying() {
-        return ((pagerView) getActivity()).apService.mp.hasCurrentBook;
+        if(getService() != null){
+            return getService().mp.hasCurrentBook;
+        } return false;
     }
     private int currentChapterIndex(){
-        return ((pagerView) getActivity()).apService.mp.currentChapterIndex;
+        if(getService() != null){
+        return getService().mp.currentChapterIndex;
+        } return 0;
     }
     private int chapterArraySize(){
-        return ((pagerView) getActivity()).apService.currentBookChapterList.size();
+        if(getService() != null){
+            return getService().currentBookChapterList.size();
+        } return 0;
     }
     private void playChapter(int chapterIndex){
-        if(hasBookPlaying()) { ((pagerView) getActivity()).apService.mp.playBook(currentBookName(),chapterIndex,((pagerView) getActivity())); }
+        if(getService() != null){
+            if(hasBookPlaying()) {
+                getService().mp.playBook(currentBookName(),chapterIndex,((pagerView) getActivity()));
+            }
+        }
     }
     private void stopMediaPlayer(){
-        ((pagerView) getActivity()).apService.mp.stop();
+        if(getService() != null){
+            getService().mp.stop();
+        }
     }
     private void setPlayerHasNoBook(){
-        ((pagerView) getActivity()).apService.mp.playerStartedPlayingABook = false;
+        if(getService() != null){
+            getService().mp.playerStartedPlayingABook = false;
+        }
     }
-
-
+    private AudioplayerService getService(){
+        return ((pagerView) getActivity()).apService;
+    }
 }
