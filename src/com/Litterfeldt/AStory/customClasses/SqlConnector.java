@@ -55,6 +55,7 @@ public class SqlConnector extends SQLiteOpenHelper{
     ));
     private static final String selectAllBooks = "Select "+COLUMN_BOOK_LIST_NAME+", "+COLUMN_BOOK_LIST_AUTHOR+", "+COLUMN_CHAPTER_LIST_CHAPTER_PATH+" from S_CHAPTERLIST where CHAPTER_NR = 1 order by BOOK_AUTHOR;";
     private static final String selectBook = "Select BOOK_TITLE, BOOK_AUTHOR, FILEPATH, DURATION, CHAPTER_NR, NUMBER_OF_CHAPTERS from S_CHAPTERLIST where BOOK_TITLE = '?' order by CHAPTER_NR;";
+    private static final String selectBookByPath = "Select BOOK_TITLE, BOOK_AUTHOR, FILEPATH, DURATION, CHAPTER_NR, NUMBER_OF_CHAPTERS from S_CHAPTERLIST where FILEPATH = '?' order by CHAPTER_NR;";
     private static final String selectBookNameFromID = "Select BOOK_TITLE from S_CHAPTERLIST where ID = '?';";
     private static final String selectBookIDFromName = "Select ID from S_CHAPTERLIST where BOOK_TITLE = '?';";
     private static final String getimage = "Select IMG_BLOB from S_IMAGECACHE where BOOK_TITLE = '?';";
@@ -79,8 +80,8 @@ public class SqlConnector extends SQLiteOpenHelper{
         mmr = new MediaMetadataRetriever();
 
     }
-    public ArrayList<String> allocateBookFolderHerarchy(){
-        ArrayList<String> bookPathList = new ArrayList<String>();
+    public ArrayList<ArrayList<String>> allocateBookFolderHerarchy(){
+        ArrayList<ArrayList<String>> bookPathList = new ArrayList<ArrayList<String>>();
 
         File[] files = defaultDir.listFiles();
 
@@ -89,22 +90,35 @@ public class SqlConnector extends SQLiteOpenHelper{
         }else {
             for (File f : files){
                 if(f.isDirectory()){
-                    bookPathList.add(f.getAbsolutePath());
+                    ArrayList<String> dirList = new ArrayList<String>();
+                    for (File d : f.listFiles()){
+                        String fullpath = d.getAbsolutePath();
+                        String filetype = fullpath.substring(fullpath.lastIndexOf(".")+1);
+
+                        if(acceptedFormats.contains(filetype.toLowerCase())){
+                            dirList.add(fullpath);
+                        }
+
+                    }
+                    bookPathList.add(dirList);
                 }
                 else if (f.isFile()){
                     String fullpath = f.getAbsolutePath();
                     String filetype = fullpath.substring(fullpath.lastIndexOf(".")+1);
 
                     if(acceptedFormats.contains(filetype.toLowerCase())){
-                        bookPathList.add(fullpath);
+                        ArrayList<String> book = new ArrayList<String>();
+                        book.add(fullpath);
+                        bookPathList.add(book);
                     }}}
-            bookPathHerarchy = bookPathList;
+            Log.e("",bookPathList.toString());
             return bookPathList;
         }
     }
     public void allocateBooks(){
 
         File[] files = defaultDir.listFiles();
+
         if(files == null){
             Log.e("ASTORY","The audiobook-folder is empty");
         }
@@ -112,7 +126,7 @@ public class SqlConnector extends SQLiteOpenHelper{
         for (File f : files){
             imageIsCached = false;
             if(f.isDirectory()){
-                makeChapterlist(f);
+                addChapters(f);
             }
             else if (f.isFile()){
                 String fullpath = f.getAbsolutePath();
@@ -123,7 +137,7 @@ public class SqlConnector extends SQLiteOpenHelper{
                 }}}
         }
     }
-    private void makeChapterlist(File directory){
+    private void addChapters(File directory){
         File files[] = directory.listFiles();
         chaptercounter = 0;
         for (File f : files){
@@ -132,7 +146,8 @@ public class SqlConnector extends SQLiteOpenHelper{
                 if(audiopath != null){
                   addChapter(audiopath);
                 }}}}
-    private void addChapter(String path){
+    public void addChapter(String path){
+
         mmr.setDataSource(path);
         String bookName = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
         String author = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
@@ -326,11 +341,38 @@ public class SqlConnector extends SQLiteOpenHelper{
         return chapters;
     }
     public String getBookNameFromID(int bookID){
+
         Cursor cur = db.rawQuery(selectBookNameFromID.replace("?",String.valueOf(bookID)),null);
-        cur.moveToFirst();
-        return (cur.getString(0));
+
+        if(cur.getCount() > 0){
+            cur.moveToFirst();
+            return (cur.getString(0));
+        } return (null);
 
     }
+    public ArrayList<String> getBookNameFromPath(String path){
+        Cursor cur = db.rawQuery(selectBookByPath.replace("?",String.valueOf(path)),null);
+        ArrayList<String> list = new ArrayList<String>();
+        if (cur.getCount() > 0){
+            cur.moveToFirst();
+
+            list.add(cur.getString(0));
+            list.add(cur.getString(1));
+        }
+        return (list);
+
+    }
+    public String getBookAuthorFromName(String name){
+        Cursor cur = db.rawQuery(selectBook.replace("?",String.valueOf(name)),null);
+        String s = "";
+        if (cur.getCount() > 0){
+            cur.moveToFirst();
+            s = cur.getString(1);
+        }
+        return (s);
+
+    }
+
 
     public int getBookIDFromName(String BookName){
         Cursor cur = db.rawQuery(selectBookIDFromName.replace("?",BookName.replace("'","''")),null);

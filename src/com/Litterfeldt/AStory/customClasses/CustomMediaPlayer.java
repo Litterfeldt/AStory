@@ -1,6 +1,7 @@
 package com.Litterfeldt.AStory.customClasses;
 import android.media.MediaPlayer;
 import com.Litterfeldt.AStory.pagerView;
+import java.util.ArrayList;
 
 import java.io.IOException;
 
@@ -75,10 +76,15 @@ public class CustomMediaPlayer {
     }
     public void playBook(String Bookname,int Chapterindex, pagerView activity){
         try{
+            playerStartedPlayingABook = hasCurrentBook = isPlaying = pauseIMGisSet =  false;
+            backgroundIsSet = false;
             stop();
             reset();
 
             activity.apService.getChapters(Bookname);
+            ArrayList<ArrayList<String>> chapterList = activity.apService.currentBookChapterList;
+
+            if (Chapterindex < chapterList.size()){
 
             datasource = activity.apService.currentBookChapterList.get(Chapterindex).get(2);
             setDataSource(datasource);
@@ -92,6 +98,8 @@ public class CustomMediaPlayer {
 
             playerStartedPlayingABook = hasCurrentBook = isPlaying = pauseIMGisSet =  true;
             backgroundIsSet = false;
+            }
+
         } catch (IOException e) {e.printStackTrace();}
     }
     public void release(){

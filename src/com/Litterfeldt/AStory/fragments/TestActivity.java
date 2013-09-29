@@ -37,7 +37,7 @@ public class TestActivity extends Fragment {
         View view = inflater.inflate(R.layout.library_two, container, false);
         pullToRefreshView = (PullToRefreshListView)view.findViewById(R.id.pull_to_refresh_listview);
         ((pagerView) getActivity()).apService.getBookList();
-        try{
+        /**try{
             adapter = new CustomListAdapterVTwo(((pagerView) getActivity()) ,((pagerView) getActivity()).apService.booklist);
             pullToRefreshView.setAdapter(adapter);
         }
@@ -45,13 +45,14 @@ public class TestActivity extends Fragment {
             Log.e("ERROR/Astory/LIBRARY","NullpointerException");
             Toast.makeText(getActivity(),"Your Audiobook-folder is empty, please put books in your /AudioBooks folder on your external storage drive", Toast.LENGTH_LONG);
         }
+         **/
 
 
 
         pullToRefreshView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
             @Override
             public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-                updateThread = new Thread(new Runnable() {
+                /**updateThread = new Thread(new Runnable() {
                     @Override
                     public void run() {
                         ((pagerView) getActivity()).apService.sqlConnector.emptyBookList();
@@ -75,7 +76,7 @@ public class TestActivity extends Fragment {
                         }
                         pullToRefreshView.onRefreshComplete();
 
-                    }};
+                    }};**/
             }
         });
 
