@@ -23,13 +23,15 @@ public class pagerView extends FragmentActivity {
     public AudioplayerService apService;
     public boolean serviceBound = false;
     public boolean updatePicture = false;
+
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             apService = ((AudioplayerService.AudioplayerBinder)service).getService();
             if(!((CoreApplication)getApplication()).serviceStarted){
             ((CoreApplication)getApplication()).serviceStarted=true;
-            startup();}
+            startup();
+            }
         }
         @Override
         public void onServiceDisconnected(ComponentName name) {
@@ -42,25 +44,15 @@ public class pagerView extends FragmentActivity {
         mPager = (ViewPager) findViewById(R.id.viewpager);
         mPager.setAdapter(mAdapter);
     }
-
-    /**
-     * Called when the activity is first created.
-     */
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         if(((CoreApplication)getApplication()).serviceStarted){
            startup();
-        }
-        else {
+        }else {
             doBindService();
         }
         super.onCreate(savedInstanceState);
-
     }
-
-
-
     @Override
     protected void onPause() {
         doUnbindService();
@@ -76,14 +68,10 @@ public class pagerView extends FragmentActivity {
         doBindService();
         super.onStart();
      }
-
     @Override
     protected void onStop() {
         doUnbindService();
-
         super.onStop();
-
-
     }
     void doBindService(){
         if(!serviceBound){
@@ -99,9 +87,9 @@ public class pagerView extends FragmentActivity {
         }
     }
 
-    //########################################################## PRIVATE STATIC CLASSES ##############################################
+    //################# PRIVATE STATIC CLASSES #################
     public static class MyFragmentPagerAdapter extends FragmentPagerAdapter {
-        public static final int NUMBER_OF_PAGES = 1;
+        public static final int NUMBER_OF_PAGES = 2;
 
         public MyFragmentPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -112,10 +100,8 @@ public class pagerView extends FragmentActivity {
             switch (position){
                 case 0:
                     return new PlayerFragment();
-                /**case 1:
+                case 1:
                     return new LibraryFragment();
-                case 2:
-                    return new LibraryFragment();**/
                 default:
                     return null;
             }
