@@ -61,6 +61,7 @@ public class SqlConnector extends SQLiteOpenHelper{
     private static final String getLastSave = "Select "+COLUMN_SAVED_STATE_BOOK_ID+", "+COLUMN_SAVED_STATE_CHAPTER_ID+", "+COLUMN_SAVED_STATE_CURRENT_TIME_POS+" from S_SAVEDSTATE;";
 
     private int chaptercounter;
+    private ArrayList<String> bookPathHerarchy;
     private Context context;
 
 
@@ -77,6 +78,29 @@ public class SqlConnector extends SQLiteOpenHelper{
         db=getWritableDatabase();
         mmr = new MediaMetadataRetriever();
 
+    }
+    public ArrayList<String> allocateBookFolderHerarchy(){
+        ArrayList<String> bookPathList = new ArrayList<String>();
+
+        File[] files = defaultDir.listFiles();
+
+        if (files == null){
+            return null;
+        }else {
+            for (File f : files){
+                if(f.isDirectory()){
+                    bookPathList.add(f.getAbsolutePath());
+                }
+                else if (f.isFile()){
+                    String fullpath = f.getAbsolutePath();
+                    String filetype = fullpath.substring(fullpath.lastIndexOf(".")+1);
+
+                    if(acceptedFormats.contains(filetype.toLowerCase())){
+                        bookPathList.add(fullpath);
+                    }}}
+            bookPathHerarchy = bookPathList;
+            return bookPathList;
+        }
     }
     public void allocateBooks(){
 
@@ -175,7 +199,6 @@ public class SqlConnector extends SQLiteOpenHelper{
     public byte[] getPicture(String bookname){
         Cursor cur = db.rawQuery(getimage.replace("?",bookname.replace("'","''")),null);
         cur.moveToFirst();
-        Log.i("DEV",cur.getBlob(0).toString());
         return cur.getBlob(0);
     }
 
