@@ -22,7 +22,6 @@ public class pagerView extends FragmentActivity {
     public ViewPager mPager;
     public AudioplayerService apService;
     public boolean serviceBound = false;
-    public boolean updatePicture = false;
 
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override

@@ -291,19 +291,9 @@ public class PlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeL
         }
     }
     private void save(){
-        if(getMediaPlayer() != null){
-            if(getMediaPlayer().hasBook()){
-                Book book = getMediaPlayer().book();
-                SaveState s = new SaveState(book.id(),
-                        book.currentChapterIndex(),
-                        getMediaPlayer().getCurrentPosition());
-                dbSave.setSave(this.getActivity().getApplicationContext(),s);
-            }
-        }
+        getService().save();
     }
     private SaveState getSave(){
-        if(getMediaPlayer() != null){
-            return dbSave.getSave(this.getActivity().getApplicationContext());
-        }return null;
+        return getService().getSave();
     }
 }
