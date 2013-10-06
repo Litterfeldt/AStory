@@ -28,7 +28,10 @@
 		<!-- Base text color, typeface, size, and style for Header and Footer Loading Views Sub Header -->
 		 <attr name="ptrSubHeaderTextAppearance" format="reference"/> 
 		<!-- Style of Animation should be used displayed when pulling. -->
-		 -<attr name="ptrAnimationStyle"> <flag name="rotate" value="0x1"/> <flag name="flip" value="0x0"/> </attr>
+        <attr name="ptrAnimationStyle">
+            <flag name="rotate" value="0x0" />
+            <flag name="flip" value="0x1" />
+        </attr>
 		<!-- Whether the user can scroll while the View is Refreshing -->
 		 <attr name="ptrScrollingWhileRefreshingEnabled" format="reference|boolean"/> 
 		<!-- Whether PullToRefreshListView has it's extras enabled. This allows the user to be able to scroll while refreshing, and behaves better. It acheives this by adding Header and/or Footer Views to the ListView. -->

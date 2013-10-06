@@ -99,7 +99,6 @@ public class FlipLoadingLayout extends LoadingLayout {
 	protected void refreshingImpl() {
 		mHeaderImage.clearAnimation();
 		mHeaderImage.setVisibility(View.INVISIBLE);
-		mHeaderProgress.setVisibility(View.VISIBLE);
 	}
 
 	@Override
@@ -110,13 +109,12 @@ public class FlipLoadingLayout extends LoadingLayout {
 	@Override
 	protected void resetImpl() {
 		mHeaderImage.clearAnimation();
-		mHeaderProgress.setVisibility(View.GONE);
 		mHeaderImage.setVisibility(View.VISIBLE);
 	}
 
 	@Override
 	protected int getDefaultDrawableResId() {
-		return R.drawable.default_ptr_flip;
+		return R.drawable.default_ptr_rotate;
 	}
 
 	private float getDrawableRotationAngle() {
