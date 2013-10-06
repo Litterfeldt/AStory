@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="80dp" xmlns:android="http://schemas.android.com/apk/res/android"
+        android:paddingBottom="15dp"
+        android:paddingLeft="15dp"
+        >
+
+    <ImageView
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:paddingRight="5dp"
+            android:src="@drawable/cogs"
+            />
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:paddingLeft="5dp"
+            android:gravity="center_vertical">
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pull to refresh"
+                android:id="@+id/BoxGetBooksTitle"
+                android:layout_gravity="left|center_vertical"
+                android:textColor="@android:color/white"
+                android:textSize="20dp"
+
+                android:singleLine="true"
+                android:ellipsize="end"/>
+    </LinearLayout>
+</LinearLayout>

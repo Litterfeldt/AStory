@@ -1,32 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_height="fill_parent"
-              android:layout_width="fill_parent"
-              android:orientation="vertical"
-              android:background="#000000"
+                android:layout_height="fill_parent"
+                android:layout_width="fill_parent"
+                android:orientation="vertical"
+                android:background="#000000"
         >
-    <ProgressBar
-            android:id="@+id/searchSpinner"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:layout_centerInParent="true"
-            android:visibility="gone"
-            android:spinnerMode="dialog"
-            />
 
 
-    <com.handmark.pulltorefresh.library.PullToRefreshGridView
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
             android:layout_height="fill_parent"
             android:layout_width="fill_parent"
             android:id="@+id/pull_to_refresh_listview"
-            android:numColumns="2"
-            android:stretchMode="columnWidth"
             android:layout_alignParentTop="true"
-            ptrAnimationStyle="flip"
-
-
-            />
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:divider="@null"
+            android:paddingBottom="35dp"
+            android:orientation="vertical"
+            android:listSelector="@android:color/transparent"/>
 
 
 </RelativeLayout>

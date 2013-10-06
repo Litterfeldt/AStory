@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="80dp" xmlns:android="http://schemas.android.com/apk/res/android"
+        android:paddingBottom="15dp"
+        android:paddingLeft="15dp"
+        android:focusable="false">
+
+    <ImageView
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:id="@+id/BoxBookCoverImage"
+            android:scaleType="centerCrop"
+            android:paddingRight="5dp"
+            android:focusable="false"/>
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:padding="5dp"
+            android:focusable="false">
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="BookTitle"
+                android:id="@+id/BoxBookTitle"
+                android:layout_gravity="left|center_vertical"
+                android:textColor="@android:color/white"
+                android:textSize="22dp"
+                android:focusable="false"
+                android:singleLine="true"
+                android:ellipsize="end"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Author"
+                android:id="@+id/BoxBookAuthor"
+                android:layout_gravity="left|center_vertical"
+                android:paddingTop="0dp"
+                android:textSize="17dp"
+                android:focusable="false"
+                android:singleLine="true"
+                android:ellipsize="end"/>
+    </LinearLayout>
+</LinearLayout>
