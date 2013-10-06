@@ -38,13 +38,10 @@ public class LibraryAdapter extends ArrayAdapter<Book> {
         }
 
         Book item = getItem(position);
-        Log.e("ITEM","hello item : "+ item.toString());
         if (item != null) {
             TextView header = (TextView)view.findViewById(R.id.BoxBookTitle);
             TextView author = (TextView)view.findViewById(R.id.BoxBookAuthor);
             ImageView img = (ImageView)view.findViewById(R.id.BoxBookCoverImage);
-
-            Log.e("ITEM", item.name() + " " + item.author());
             System.out.println();
             if (header != null && item.name() != null) {
                 header.setTypeface(font);
