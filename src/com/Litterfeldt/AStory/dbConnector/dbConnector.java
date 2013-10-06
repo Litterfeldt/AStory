@@ -22,55 +22,66 @@ public class dbConnector extends SQLiteOpenHelper {
     }
 
     private static final String DATABASE_NAME = "astory_cache.db";
-    private static final int DATABASE_VERSION = 3;
-    private static SQLiteDatabase db;
-
+    private static final int DATABASE_VERSION = 1;
 
     //Tables
-    private static final String TABLE_NAME_SAVED_STATE = "S_SAVEDSTATE";
-    private static final String TABLE_NAME_CHAPTER_LIST ="S_CHAPTERLIST";
-    private static final String TABLE_NAME_BOOK_IMG = "S_IMAGECACHE";
+    public static final String TABLE_NAME_SAVED_STATE = "S_SAVEDSTATE";
+    public static final String TABLE_NAME_CHAPTER_LIST ="S_CHAPTERLIST";
+    public static final String TABLE_NAME_BOOK_LIST ="S_BOOKLIST";
+    public static final String TABLE_NAME_BOOK_IMG = "S_IMAGECACHE";
 
     //image cache columns
-    private static final String COLUMN_BOOK_IMG_BOOK_NAME ="BOOK_TITLE";
-    private static final String COLUMN_BOOK_IMG_BOOK_IMG ="IMG_BLOB";
+    public static final String COLUMN_BOOK_IMG_BOOK_ID ="BOOK_ID";
+    public static final String COLUMN_BOOK_IMG_BOOK_IMG ="IMG_BLOB";
 
     //saved_state columns
-    private static final String COLUMN_SAVED_STATE_STATE_ID ="ID";
-    private static final String COLUMN_SAVED_STATE_BOOK_ID ="BOOK_ID";
-    private static final String COLUMN_SAVED_STATE_CHAPTER_ID ="CHAPTER_ID";
-    private static final String COLUMN_SAVED_STATE_CURRENT_TIME_POS="TIME_POS";
-    private static final String COLUMN_SAVED_STATE_BOOKMARK_TAG="MADE_BY";
+    public static final String COLUMN_SAVED_STATE_STATE_ID ="ID";
+    public static final String COLUMN_SAVED_STATE_BOOK_ID ="BOOK_ID";
+    public static final String COLUMN_SAVED_STATE_CHAPTER_ID ="CHAPTER_ID";
+    public static final String COLUMN_SAVED_STATE_CURRENT_TIME_POS="TIME_POS";
+    public static final String COLUMN_SAVED_STATE_BOOKMARK_TAG="MADE_BY";
 
     //chapter_list columns
-    private static final String COLUMN_CHAPTER_LIST_CHAPTER_ID ="ID";
-    private static final String COLUMN_CHAPTER_LIST_CHAPTER_NR="CHAPTER_NR";
-    private static final String COLUMN_CHAPTER_LIST_CHAPTER_PATH="FILEPATH";
-    private static final String COLUMN_CHAPTER_LIST_CHAPTER_DURATION ="DURATION";
-    private static final String COLUMN_BOOK_LIST_NAME="BOOK_TITLE";
-    private static final String COLUMN_BOOK_LIST_AUTHOR="BOOK_AUTHOR";
-    private static final String COLUMN_BOOK_LIST_CHAPTER_COUNT="NUMBER_OF_CHAPTERS";
+    public static final String COLUMN_CHAPTER_LIST_CHAPTER_ID ="ID";
+    public static final String COLUMN_CHAPTER_LIST_BOOK_ID ="BOOK_ID";
+    public static final String COLUMN_CHAPTER_LIST_CHAPTER_NR="CHAPTER_NR";
+    public static final String COLUMN_CHAPTER_LIST_CHAPTER_PATH="FILEPATH";
+    public static final String COLUMN_CHAPTER_LIST_CHAPTER_DURATION ="DURATION";
+
+
+    public static final String COLUMN_BOOK_LIST_ID="ID";
+    public static final String COLUMN_BOOK_LIST_NAME="BOOK_TITLE";
+    public static final String COLUMN_BOOK_LIST_AUTHOR="BOOK_AUTHOR";
 
 
 
     public dbConnector(Context context, String name, SQLiteDatabase.CursorFactory factory, int version, DatabaseErrorHandler errorHandler) {
         super(context, name, factory, version, errorHandler);
-        db=getWritableDatabase();
+    }
+
+    public SQLiteDatabase write(){
+        return getWritableDatabase();
+    }
+    public SQLiteDatabase read(){
+        return getReadableDatabase();
     }
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL("CREATE TABLE "+TABLE_NAME_CHAPTER_LIST+ " ("
                 + COLUMN_CHAPTER_LIST_CHAPTER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + COLUMN_CHAPTER_LIST_CHAPTER_PATH +" TEXT,"
+                + COLUMN_CHAPTER_LIST_BOOK_ID + " INTEGER,"
                 + COLUMN_CHAPTER_LIST_CHAPTER_NR +" INTEGER,"
-                + COLUMN_CHAPTER_LIST_CHAPTER_DURATION +" INTEGER,"
+                + COLUMN_CHAPTER_LIST_CHAPTER_PATH +" TEXT,"
+                + COLUMN_CHAPTER_LIST_CHAPTER_DURATION +" INTEGER"
+                + ");");
+        sqLiteDatabase.execSQL("CREATE TABLE "+TABLE_NAME_BOOK_LIST+ " ("
+                + COLUMN_BOOK_LIST_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + COLUMN_BOOK_LIST_NAME +" TEXT,"
-                + COLUMN_BOOK_LIST_AUTHOR +" TEXT,"
-                + COLUMN_BOOK_LIST_CHAPTER_COUNT +" INTEGER"
+                + COLUMN_BOOK_LIST_AUTHOR +" TEXT"
                 + ");");
         sqLiteDatabase.execSQL("CREATE TABLE "+TABLE_NAME_BOOK_IMG+ " ("
-                + COLUMN_BOOK_IMG_BOOK_NAME +" TEXT,"
+                + COLUMN_BOOK_IMG_BOOK_ID +" INTEGER,"
                 + COLUMN_BOOK_IMG_BOOK_IMG +" BLOB"
                 + ");");
 
@@ -97,10 +108,10 @@ public class dbConnector extends SQLiteOpenHelper {
 
             sqLiteDatabase.execSQL("DROP TABLE "+ TABLE_NAME_CHAPTER_LIST +";");
 
-
+            sqLiteDatabase.execSQL("DROP TABLE "+ TABLE_NAME_BOOK_LIST +";");
         }
         catch (Exception e){
-            Log.w("SQL/DATABASEUPGRADE", "No tables to drop.");
+            Log.w("SQL/DATABASEUPGRADE", "Failed to drop all databases");
         }
 
         //RECREATE DATABASE FROM NEW VERSION
