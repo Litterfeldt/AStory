@@ -1,40 +1,61 @@
 package com.Litterfeldt.AStory.models;
 
+import java.util.*;
+
 public class Book {
 
-    private String name;
-    private String author;
-    private List<String> chapters;
+    private String bookName;
+    private int bookId;
+    private String bookAuthor;
+    private ArrayList<Chapter> bookChapters;
     private int currentChapterIndex;
+    private byte[] coverImage;
 
-    public Book(String name, String author, List<String> chapters){
-        self.name = name;
-        self.author = author;
-        self.chapters = chapter;
-        self.currentChapterIndex = 0;
+    public Book(int id, String name, String author, ArrayList<Chapter> chapterList, byte[] image){
+        currentChapterIndex = 0;
+        bookId = id;
+        bookName = name;
+        bookAuthor = author;
+        bookChapters = chapterList;
+        coverImage = image;
     }
-    public String getName() {
-        return name;
+    public int id() {
+        return bookId;
     }
-    public String getAuthor() {
-        return author;
+    public String name() {
+        return bookName;
     }
-    public List<String> getChapters() {
-        return chapters;
+    public String author() {
+        return bookAuthor;
     }
-    public int getChapterCount(){
-        return chapters.size();
+    public ArrayList<Chapter> getChapters() {
+        return bookChapters;
     }
-    public String nextChapter(){
-        self.currentChapterIndex++;
+    public int chapterCount(){
+        return bookChapters.size();
+    }
+    public boolean hasNextChapter(){
+        return (currentChapterIndex<chapterCount());
+    }
+    public boolean hasPreviousChapter(){
+        return (currentChapterIndex>0);
+    }
+    public int currentChapterIndex(){
+        return currentChapterIndex;
+    }
+    public Chapter nextChapter(){
+        currentChapterIndex++;
         return getChapter(currentChapterIndex);
     }
-    public String prevChapter(){
-        self.currentChapterIndex--;
+    public Chapter prevChapter(){
+        currentChapterIndex--;
         return getChapter(currentChapterIndex);
     }
-    public String getChapter(chapterIndex){
-        self.currentChapterIndex = chapterIndex;
-        return chapters.get(chapterIndex)
+    public Chapter getChapter(int chapterIndex){
+        currentChapterIndex = chapterIndex;
+        return bookChapters.get(chapterIndex);
+    }
+    public byte[] image(){
+        return coverImage;
     }
 }
