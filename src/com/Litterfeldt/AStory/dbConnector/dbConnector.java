@@ -22,7 +22,7 @@ public class dbConnector extends SQLiteOpenHelper {
     }
 
     private static final String DATABASE_NAME = "astory_cache.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 10;
 
     //Tables
     public static final String TABLE_NAME_SAVED_STATE = "S_SAVEDSTATE";
