@@ -17,6 +17,7 @@ import java.util.*;
 
 import com.Litterfeldt.AStory.R;
 import com.Litterfeldt.AStory.models.Book;
+import com.Litterfeldt.AStory.pagerView;
 
 public class LibraryAdapter extends ArrayAdapter<Book> {
 
@@ -27,29 +28,54 @@ public class LibraryAdapter extends ArrayAdapter<Book> {
         this.context = context;
         this.font = font;
     }
+
+    @Override
+    public int getCount(){
+        return super.getCount() +1;
+    }
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = convertView;
-        if (view == null) {
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.librarylistbox, null);
-        }
 
-        Book item = getItem(position);
-        if (item != null) {
-            TextView header = (TextView)view.findViewById(R.id.BoxBookTitle);
-            TextView author = (TextView)view.findViewById(R.id.BoxBookAuthor);
-            ImageView img = (ImageView)view.findViewById(R.id.BoxBookCoverImage);
-            System.out.println();
-            if (header != null && item.name() != null) {
+        if(position == 0){
+            if (view == null){
+                LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                view = inflater.inflate(R.layout.library_header, null);
+                TextView header = (TextView)view.findViewById(R.id.BoxHeaderTitle);
+                TextView subHeader = (TextView)view.findViewById(R.id.BoxHeaderSubTitle);
+                subHeader.setTypeface(font);
                 header.setTypeface(font);
-                header.setText(item.name());
             }
-            if (author != null && item.author() != null) {
-                author.setTypeface(font);
-                author.setText(item.author());
-            }
-            if (img != null && item.image() != null) {
-                img.setImageDrawable(new BitmapDrawable(BitmapFactory.decodeByteArray(item.image(), 0, item.image().length)));
+
+        }else{
+
+
+            Book item = getItem(position-1);
+            if (item != null) {
+                if(item.id() == -1) {
+
+                        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                        view = inflater.inflate(R.layout.library_get_book_list, null);
+                        TextView header = (TextView)view.findViewById(R.id.BoxGetBooksTitle);
+                        header.setTypeface(font);
+
+                }else{
+                    LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    view = inflater.inflate(R.layout.librarylistbox, null);
+                    TextView header = (TextView)view.findViewById(R.id.BoxBookTitle);
+                    TextView author = (TextView)view.findViewById(R.id.BoxBookAuthor);
+                    ImageView img = (ImageView)view.findViewById(R.id.BoxBookCoverImage);
+                    if (header != null && item.name() != null) {
+                        header.setTypeface(font);
+                        header.setText(item.name());
+                    }
+                    if (author != null && item.author() != null) {
+                        author.setTypeface(font);
+                        author.setText(item.author());
+                    }
+                    if (img != null && item.image() != null) {
+                        img.setImageDrawable(new BitmapDrawable(BitmapFactory.decodeByteArray(item.image(), 0, item.image().length)));
+                    }
+                }
             }
         }
         return view;

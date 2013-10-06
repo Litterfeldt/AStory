@@ -109,6 +109,8 @@ public class PlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeL
             }
         });
 
+        if (getMediaPlayer().hasBook()) SetBackgroundAndTitle();
+
         if (!getMediaPlayer().isPlaying() && !getMediaPlayer().hasBook()){
             SaveState s = getSave();
             if (s != null ){
@@ -227,13 +229,11 @@ public class PlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeL
     }
     private void SetBackgroundAndTitle() {
         CustomMediaPlayer mp = getMediaPlayer();
-        if (mp.isPlaying()){
-            byte[] b = mp.book().image();
-            background.setImageDrawable(new BitmapDrawable(BitmapFactory.decodeByteArray(b, 0, b.length)));
-            book.setText(mp.book().name());
-            author.setText(mp.book().author());
-            mp.setBackgroundToggle(true);
-        }
+        byte[] b = mp.book().image();
+        background.setImageDrawable(new BitmapDrawable(BitmapFactory.decodeByteArray(b, 0, b.length)));
+        book.setText(mp.book().name());
+        author.setText(mp.book().author());
+        mp.setBackgroundToggle(true);
     }
     @Override
     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
@@ -256,7 +256,6 @@ public class PlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeL
     }
     private void backgroundIsNotSet(){
         getMediaPlayer().setBackgroundToggle(false);
-        background.setImageBitmap(null);
     }
 
 

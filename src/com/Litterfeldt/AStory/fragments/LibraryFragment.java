@@ -25,7 +25,6 @@ public class LibraryFragment extends Fragment {
 
     private LibraryAdapter adapter;
     private PullToRefreshListView list;
-    private TextView emptyText;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -45,8 +44,10 @@ public class LibraryFragment extends Fragment {
         list.getRefreshableView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                if(i == 1 || i == adapter.getCount()) return;
+
                 Log.e("list","clicked on "+ Integer.toString(i));
-                getService().getMediaPlayer().playBook(adapter.getItem(i-1), 0);
+                getService().getMediaPlayer().playBook(adapter.getItem(i-2), 0);
                 getService().showNotification();
                 ((pagerView) getActivity()).mPager.setCurrentItem(0);
 
@@ -54,7 +55,6 @@ public class LibraryFragment extends Fragment {
         });
 
 
-        emptyText = (TextView) view.findViewById(R.id.emptyText);
 
         bookListAtStartup(view);
 
@@ -78,6 +78,7 @@ public class LibraryFragment extends Fragment {
                     R.id.pull_to_refresh_listview,
                     new ArrayList<Book>(),
                     Typeface.createFromAsset(((pagerView) getActivity()).getAssets(), "font.ttf"));
+            adapter.add(new Book(-1,null,null,null,null));
             list.setAdapter(adapter);
 
         }
@@ -97,13 +98,11 @@ public class LibraryFragment extends Fragment {
         }
         @Override
         protected void onProgressUpdate(Book...book) {
-            adapter.add(book[0]);
+            adapter.insert(book[0],adapter.getCount()-2);
         }
         @Override
         protected void onPostExecute(ArrayList<Book> result) {
-            if(!result.isEmpty()){
-                emptyText.setVisibility(View.GONE);
-            }else {
+            if(result.isEmpty()){
                 Log.e("##########","Nothing IN audiobook folder");
                 Toast.makeText(getActivity(),"Your Audiobook-folder is empty, please put books in your /AudioBooks folder on your external storage drive", Toast.LENGTH_LONG);
             }
@@ -121,10 +120,16 @@ public class LibraryFragment extends Fragment {
                     bl,
                     Typeface.createFromAsset(((pagerView) getActivity()).getAssets(), "font.ttf"));
             list.setAdapter(adapter);
-            emptyText.setVisibility(View.GONE);
-        }
-        else{
-            emptyText.setVisibility(View.VISIBLE);
+            adapter.add(new Book(-1,null,null,null,null));
+
+        }else if (bl.isEmpty()){
+            adapter = new LibraryAdapter(view.getContext(),
+                    R.id.pull_to_refresh_listview,
+                    new ArrayList<Book>(),
+                    Typeface.createFromAsset(((pagerView) getActivity()).getAssets(), "font.ttf"));
+            list.setAdapter(adapter);
+            adapter.add(new Book(-1,null,null,null,null));
+
         }
 
     }
