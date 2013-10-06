@@ -71,19 +71,19 @@ public class LibraryFragment extends Fragment {
                     new ArrayList<Book>(),
                     Typeface.createFromAsset(((pagerView) getActivity()).getAssets(), "font.ttf"));
             list.setAdapter(adapter);
+
         }
         @Override
         protected ArrayList<Book> doInBackground(Void...v) {
             Context c = getActivity().getApplicationContext();
-            FileSystem f = FileSystem.getInstance();
             dbBook.purge(c);
+            FileSystem f = FileSystem.getInstance();
             ArrayList<ArrayList<String>> bookFolderContent = f.allocateBookFolderContent();
 
             for (ArrayList<String> chapters : bookFolderContent){
                 Book b = f.mockBookFromPath(chapters);
                 dbBook.addBook(c,b);
-                ArrayList<Book> books = getService().getBookList();
-                publishProgress(books.get(books.size()-1));
+                publishProgress(dbBook.bookById(c,dbBook.bookIdByName(c,b.name())));
             }
             return getService().getBookList();
         }
@@ -105,11 +105,12 @@ public class LibraryFragment extends Fragment {
     }
     private void bookListAtStartup(View view){
         AudioplayerService as = getService();
+        ArrayList<Book> bl = as.getBookList();
 
-        if(as != null && !as.getBookList().isEmpty()){
+        if(as != null && !bl.isEmpty()){
             adapter = new LibraryAdapter(view.getContext(),
                     R.id.pull_to_refresh_listview,
-                    as.getBookList(),
+                    bl,
                     Typeface.createFromAsset(((pagerView) getActivity()).getAssets(), "font.ttf"));
             list.setAdapter(adapter);
             emptyText.setVisibility(View.GONE);

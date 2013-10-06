@@ -17,7 +17,7 @@ public class dbSave {
 
     }
     public static SaveState getSave(Context c){
-        Cursor cursor = dbConnector.getInstance(c).read().query(dbConnector.TABLE_NAME_BOOK_LIST,
+        Cursor cursor = dbConnector.getInstance(c).read().query(dbConnector.TABLE_NAME_SAVED_STATE,
                 new String[]{dbConnector.COLUMN_SAVED_STATE_BOOK_ID,
                         dbConnector.COLUMN_SAVED_STATE_CHAPTER_ID,
                         dbConnector.COLUMN_SAVED_STATE_CURRENT_TIME_POS},
