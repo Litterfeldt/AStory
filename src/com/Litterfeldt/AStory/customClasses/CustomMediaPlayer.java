@@ -33,7 +33,6 @@ public class CustomMediaPlayer {
             start();
         }catch(IOException e){
             currentBook = null;
-            Log.e("Astory||Media player", "Couldn't play book");
         }
     }
 
@@ -48,7 +47,6 @@ public class CustomMediaPlayer {
                 return true;
             }catch (IOException e){
                 currentBook = null;
-                Log.e("Astory||Media player", "Couldn't play next chapter");
             }
         }
         return false;
@@ -64,7 +62,6 @@ public class CustomMediaPlayer {
                 return true;
             }catch (IOException e){
                 currentBook = null;
-                Log.e("Astory||Media player", "Couldn't play previous chapter");
             }
         }
         return false;

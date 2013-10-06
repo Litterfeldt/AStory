@@ -61,8 +61,6 @@ public class dbBook {
         initialValues.put(dbConnector.COLUMN_BOOK_LIST_AUTHOR,book.author());
         connector.write().insert(dbConnector.TABLE_NAME_BOOK_LIST, null, initialValues);
         int bookID = getBookId(book.name());
-        Log.e("addBook",Integer.toString(bookID));
-
         for (Chapter chapter : book.getChapters()){
             addChapter(chapter, bookID);
         }

@@ -45,8 +45,6 @@ public class LibraryFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 if(i == 1 || i == adapter.getCount()) return;
-
-                Log.e("list","clicked on "+ Integer.toString(i));
                 getService().getMediaPlayer().playBook(adapter.getItem(i-2), 0);
                 getService().showNotification();
                 ((pagerView) getActivity()).mPager.setCurrentItem(0);
@@ -103,7 +101,6 @@ public class LibraryFragment extends Fragment {
         @Override
         protected void onPostExecute(ArrayList<Book> result) {
             if(result.isEmpty()){
-                Log.e("##########","Nothing IN audiobook folder");
                 Toast.makeText(getActivity(),"Your Audiobook-folder is empty, please put books in your /AudioBooks folder on your external storage drive", Toast.LENGTH_LONG);
             }
             list.onRefreshComplete();
