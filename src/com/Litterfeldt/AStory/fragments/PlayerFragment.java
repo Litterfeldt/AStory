@@ -7,20 +7,17 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.Litterfeldt.AStory.R;
 import com.Litterfeldt.AStory.customClasses.CustomMediaPlayer;
-import com.Litterfeldt.AStory.dbConnector.dbBook;
 import com.Litterfeldt.AStory.dbConnector.dbSave;
 import com.Litterfeldt.AStory.models.Book;
 import com.Litterfeldt.AStory.models.SaveState;
 import com.Litterfeldt.AStory.pagerView;
 import com.Litterfeldt.AStory.services.AudioplayerService;
-import java.util.ArrayList;
 
 public class PlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeListener {
     private TextView book;
@@ -41,7 +38,6 @@ public class PlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeL
     private Runnable mUpdateTimeTask;
     private Handler mHandler;
 
-    private boolean background_img;
 
 
     @Override
@@ -132,6 +128,7 @@ public class PlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeL
                         processbar.setProgress((int) currentDuration);
                         progressBar.setMax((int) totalDuration);
                         progressBar.setProgress((int) currentDuration);
+                        processbar.setProgress((int)currentDuration);
                         if (!isBackgroundSet()) {
                             SetBackgroundAndTitle();
                         }
@@ -139,13 +136,12 @@ public class PlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeL
                         if (mp.isPlaying()){
                             timegone.setText("" + getTimeString(currentDuration));
                             timeleft.setText("" + getTimeString(totalDuration - currentDuration));
-                            int progress = getProgressPercentage(currentDuration, totalDuration);
-                            processbar.setProgress(progress);
+
                             play.setBackgroundResource(R.drawable.pasue);
                         }else{
                             play.setBackgroundResource(R.drawable.play);
                         }
-                        mHandler.postDelayed(this, 250);
+                        mHandler.postDelayed(this, 500);
                     }else{
                         backgroundIsNotSet();
                         book.setText("Swipe Right");
@@ -169,6 +165,7 @@ public class PlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeL
             }else if(mp.hasBook()){
                 mp.start();
             }
+            getService().showNotification();
         }
     }
     private void pushedShortBackSkipp(int skipp) {
@@ -231,28 +228,16 @@ public class PlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeL
     private void SetBackgroundAndTitle() {
         CustomMediaPlayer mp = getMediaPlayer();
         if (mp.isPlaying()){
-            backgroundIsSet();
             byte[] b = mp.book().image();
             background.setImageDrawable(new BitmapDrawable(BitmapFactory.decodeByteArray(b, 0, b.length)));
             book.setText(mp.book().name());
             author.setText(mp.book().author());
+            mp.setBackgroundToggle(true);
         }
-    }
-    public int getProgressPercentage(long currentDuration, long totalDuration) {
-        Double percentage = (double) 0;
-
-        long currentSeconds = (int) (currentDuration / 1000);
-        long totalSeconds = (int) (totalDuration / 1000);
-
-        // calculating percentage
-        percentage = (((double) currentSeconds) / totalSeconds) * 100;
-
-        // return percentage
-        return percentage.intValue();
     }
     @Override
     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-        if (b) { getMediaPlayer().seekTo(i); }
+        if (b) { getMediaPlayer().seekTo(i);}
     }
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
@@ -263,17 +248,15 @@ public class PlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeL
         updateProgressBar();
     }
     public void updateProgressBar() {
-        mHandler.postDelayed(mUpdateTimeTask, 500);
+        mHandler.postDelayed(mUpdateTimeTask, 100);
     }
 
     private boolean isBackgroundSet(){
-        return background_img;
-    }
-    private void backgroundIsSet(){
-        background_img = true;
+        return getMediaPlayer().getBackgroundToggle();
     }
     private void backgroundIsNotSet(){
-        background_img = false;
+        getMediaPlayer().setBackgroundToggle(false);
+        background.setImageBitmap(null);
     }
 
 

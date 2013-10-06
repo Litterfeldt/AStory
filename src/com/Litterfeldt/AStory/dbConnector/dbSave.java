@@ -8,12 +8,12 @@ import com.Litterfeldt.AStory.models.SaveState;
 
 public class dbSave {
     public static void setSave(Context c,SaveState s){
-        dbConnector.getInstance(c).write().execSQL("DELETE * FROM "+dbConnector.TABLE_NAME_SAVED_STATE+";");
+        dbConnector.getInstance(c).write().execSQL("DELETE FROM "+dbConnector.TABLE_NAME_SAVED_STATE+";");
         ContentValues initialValues = new ContentValues();
         initialValues.put(dbConnector.COLUMN_SAVED_STATE_BOOK_ID,s.bookId());
         initialValues.put(dbConnector.COLUMN_SAVED_STATE_CHAPTER_ID,s.chapterId());
         initialValues.put(dbConnector.COLUMN_SAVED_STATE_CURRENT_TIME_POS,s.time_pos());
-        dbConnector.getInstance(c).write().insert(dbConnector.TABLE_NAME_BOOK_IMG, null, initialValues);
+        dbConnector.getInstance(c).write().insert(dbConnector.TABLE_NAME_SAVED_STATE, null, initialValues);
 
     }
     public static SaveState getSave(Context c){

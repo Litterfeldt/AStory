@@ -41,6 +41,19 @@ public class LibraryFragment extends Fragment {
         View view = inflater.inflate(R.layout.library, container, false);
 
         list =(PullToRefreshListView) view.findViewById(R.id.pull_to_refresh_listview);
+
+        list.getRefreshableView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Log.e("list","clicked on "+ Integer.toString(i));
+                getService().getMediaPlayer().playBook(adapter.getItem(i-1), 0);
+                getService().showNotification();
+                ((pagerView) getActivity()).mPager.setCurrentItem(0);
+
+            }
+        });
+
+
         emptyText = (TextView) view.findViewById(R.id.emptyText);
 
         bookListAtStartup(view);
@@ -53,12 +66,7 @@ public class LibraryFragment extends Fragment {
             }
         });
 
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                getService().getMediaPlayer().playBook(adapter.getItem(i), 0);
-            }
-        });
+
 
         return view;
     }
@@ -82,8 +90,8 @@ public class LibraryFragment extends Fragment {
 
             for (ArrayList<String> chapters : bookFolderContent){
                 Book b = f.mockBookFromPath(chapters);
-                dbBook.addBook(c,b);
-                publishProgress(dbBook.bookById(c,dbBook.bookIdByName(c,b.name())));
+                dbBook.addBook(c, b);
+                publishProgress(dbBook.bookById(c, dbBook.bookIdByName(c, b.name())));
             }
             return getService().getBookList();
         }

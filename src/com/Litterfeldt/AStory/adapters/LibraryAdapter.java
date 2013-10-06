@@ -26,9 +26,6 @@ public class LibraryAdapter extends ArrayAdapter<Book> {
         super(context, layoutRef, (List<Book>) books);
         this.context = context;
         this.font = font;
-
-
-
     }
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = convertView;

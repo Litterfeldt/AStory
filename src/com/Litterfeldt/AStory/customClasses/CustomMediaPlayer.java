@@ -11,6 +11,13 @@ import java.io.IOException;
 public class CustomMediaPlayer {
     private MediaPlayer mp;
     private Book currentBook;
+    private boolean backgroundToggle;
+    public void setBackgroundToggle(boolean b){
+        backgroundToggle = b;
+    }
+    public boolean getBackgroundToggle(){
+        return backgroundToggle;
+    }
 
     public CustomMediaPlayer(){
         mp = new MediaPlayer();
@@ -18,6 +25,7 @@ public class CustomMediaPlayer {
     public void playBook(Book book,int chapterIndex){
         try{
             currentBook = book;
+            setBackgroundToggle(false);
             stop();
             reset();
             setDataSource(book.getChapter(chapterIndex).Path());

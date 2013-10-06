@@ -123,7 +123,7 @@ public class AudioplayerService extends Service implements MediaPlayer.OnComplet
         }
     }
     public void previousChapter(){
-        boolean success = mp.nextChapter();
+        boolean success = mp.previousChapter();
         if (!success) {
             mp.seekTo(0);
         }
