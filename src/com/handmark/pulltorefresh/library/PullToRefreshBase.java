@@ -948,7 +948,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 	 */
 	protected final void setHeaderScroll(int value) {
 		if (DEBUG) {
-			Log.d(LOG_TAG, "setHeaderScroll: " + value);
+			//Log.d(LOG_TAG, "setHeaderScroll: " + value);
 		}
 
 		// Clamp value to with pull scroll range
