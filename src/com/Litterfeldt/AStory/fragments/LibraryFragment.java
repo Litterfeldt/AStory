@@ -89,8 +89,10 @@ public class LibraryFragment extends Fragment {
 
             for (ArrayList<String> chapters : bookFolderContent){
                 Book b = f.mockBookFromPath(chapters);
-                dbBook.addBook(c, b);
-                publishProgress(dbBook.bookById(c, dbBook.bookIdByName(c, b.name())));
+                if (b != null) {
+                    dbBook.addBook(c, b);
+                    publishProgress(dbBook.bookById(c, dbBook.bookIdByName(c, b.name())));
+                }
             }
             return getService().getBookList();
         }

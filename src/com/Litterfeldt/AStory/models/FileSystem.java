@@ -24,7 +24,6 @@ public class FileSystem {
             new String[]{"mp3", "m4a", "aac", "flac"}
     ));
 
-
     public FileSystem(){
         defaultDir = new File(Environment.getExternalStorageDirectory() +"/Audiobooks");
         if(!defaultDir.exists()){
@@ -69,6 +68,7 @@ public class FileSystem {
         String firstPath = paths.get(0);
         mmr.setDataSource(firstPath);
         String bookName = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
+        if (bookName == null || bookName == ""){ return null;}
         String author = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
         byte[] img = mmr.getEmbeddedPicture();
 
@@ -78,10 +78,19 @@ public class FileSystem {
             String duration = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
             String chapterNum = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_CD_TRACK_NUMBER);
 
-            Chapter c = new Chapter(0,s,Integer.valueOf(chapterNum), Integer.valueOf(duration));
+            Chapter c = new Chapter(0,s,toInteger(chapterNum), toInteger(duration));
             chapters.add(c);
         }
         Book book = new Book(0,bookName,author,chapters,img);
         return book;
+    }
+
+    private Integer toInteger(String str) {
+        String s = "";
+        for( char c : str.toCharArray()) {
+            if (!s.isEmpty() && !Character.isDigit(c)){ break; }
+            if (Character.isDigit(c)){ s+=c; }
+        }
+        return s.isEmpty() ? 0 : Integer.valueOf(s);
     }
 }
