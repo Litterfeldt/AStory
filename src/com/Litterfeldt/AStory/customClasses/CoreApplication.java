@@ -11,16 +11,14 @@ public class CoreApplication extends Application{
     @Override
     public void onCreate() {
         startService(new Intent(getApplicationContext(), AudioplayerService.class));
+        serviceStarted = true;
         super.onCreate();
-
-
     }
+
     @Override
-    public void onTerminate() {
+    public void onLowMemory() {
         stopService(new Intent(getApplicationContext(), AudioplayerService.class));
         serviceStarted=false;
-        super.onTerminate();
-
-
+        super.onLowMemory();
     }
 }
