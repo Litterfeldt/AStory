@@ -133,7 +133,7 @@ public class AudioplayerService extends Service implements MediaPlayer.OnComplet
                     .setContentTitle("Playing " + bookname)
                     .setContentText(author)
                     .setLargeIcon(bitmap)
-                    .setSmallIcon(R.drawable.play)
+                    .setSmallIcon(R.drawable.playicon)
                     .setDeleteIntent(PendingIntent.getBroadcast(this, 0, new Intent(SOME_ACTION), 0))
                     .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, pagerView.class), 0))
                     .build();
