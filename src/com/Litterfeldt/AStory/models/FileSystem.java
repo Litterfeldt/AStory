@@ -6,6 +6,7 @@ import android.os.Environment;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -32,6 +33,7 @@ public class FileSystem {
         }
         mmr = new MediaMetadataRetriever();
     }
+
     public ArrayList<ArrayList<String>> allocateBookFolderContent(){
         ArrayList<ArrayList<String>> bookPathList = new ArrayList<ArrayList<String>>();
 
@@ -69,6 +71,7 @@ public class FileSystem {
         if(paths.size() < 1) {
             return null;
         }
+        Collections.sort(paths);
         String firstPath = paths.get(0);
         mmr.setDataSource(firstPath);
         String bookName = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
@@ -83,7 +86,7 @@ public class FileSystem {
             String chapterNum = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_CD_TRACK_NUMBER);
 
             if(chapterNum == null) {
-                chapterNum = "" + paths.indexOf(s);
+                chapterNum = "" + paths.indexOf(s)+1;
             }
 
             Chapter c = new Chapter(0,s,toInteger(chapterNum), toInteger(duration));
