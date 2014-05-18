@@ -3,7 +3,6 @@ package com.Litterfeldt.AStory.dbConnector;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
 
 import com.Litterfeldt.AStory.models.Book;
 import com.Litterfeldt.AStory.models.Chapter;
