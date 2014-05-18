@@ -1,0 +1,25 @@
+# view res/layout/main.xml #generated:7
+-keep class android.support.v4.view.ViewPager { <init>(...); }
+
+# view res/layout/player.xml #generated:12
+# view res/layout/player.xml #generated:8
+-keep class android.widget.ImageView { <init>(...); }
+
+# view res/layout/player.xml #generated:92
+-keep class android.widget.ProgressBar { <init>(...); }
+
+# view res/layout/player.xml #generated:134
+-keep class android.widget.SeekBar { <init>(...); }
+
+# view AndroidManifest.xml #generated:10
+-keep class com.Litterfeldt.AStory.customClasses.CoreApplication { <init>(...); }
+
+# view AndroidManifest.xml #generated:11
+-keep class com.Litterfeldt.AStory.pagerView { <init>(...); }
+
+# view AndroidManifest.xml #generated:19
+-keep class com.Litterfeldt.AStory.services.AudioplayerService { <init>(...); }
+
+# view res/layout/library.xml #generated:11
+-keep class com.handmark.pulltorefresh.library.PullToRefreshListView { <init>(...); }
+
