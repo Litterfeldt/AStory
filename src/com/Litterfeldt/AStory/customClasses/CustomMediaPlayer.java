@@ -1,11 +1,7 @@
 package com.Litterfeldt.AStory.customClasses;
 import android.media.MediaPlayer;
-import android.util.Log;
 
 import com.Litterfeldt.AStory.models.Book;
-import com.Litterfeldt.AStory.pagerView;
-import java.util.ArrayList;
-
 import java.io.IOException;
 
 public class CustomMediaPlayer {
