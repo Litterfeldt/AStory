@@ -11,78 +11,93 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
-import com.Litterfeldt.AStory.customClasses.CoreApplication;
 import com.Litterfeldt.AStory.fragments.LibraryFragment;
 import com.Litterfeldt.AStory.fragments.PlayerFragment;
 import com.Litterfeldt.AStory.services.AudioplayerService;
 
 public class pagerView extends FragmentActivity {
-    public MyFragmentPagerAdapter mAdapter;
-    public ViewPager mPager;
-    public AudioplayerService apService;
-    public boolean serviceBound = false;
+    public MyFragmentPagerAdapter mAdapter = null;
+    public ViewPager mPager = null;
+    public AudioplayerService apService = null;
+    public boolean serviceConnected = false;
 
-    private ServiceConnection serviceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            apService = ((AudioplayerService.AudioplayerBinder)service).getService();
-            if(!((CoreApplication)getApplication()).serviceStarted){
-            ((CoreApplication)getApplication()).serviceStarted=true;
-            startup();
-            }
-        }
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            apService = null;
-        }
-    };
     private void startup(){
         setContentView(R.layout.main);
         mAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager());
         mPager = (ViewPager) findViewById(R.id.viewpager);
         mPager.setAdapter(mAdapter);
+        Log.e("custom","startup method");
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        if(((CoreApplication)getApplication()).serviceStarted){
-           startup();
-        }else {
-            doBindService();
-        }
+        doBindService();
         super.onCreate(savedInstanceState);
     }
     @Override
     protected void onPause() {
         doUnbindService();
+        finish();
+        Log.e("custom", "pause");
         super.onPause();
     }
     @Override
     protected void onResume(){
-        doBindService();
+        if(serviceConnected){
+            startup();
+        }else{
+            doBindService();
+        }
+        Log.e("custom", "resume");
         super.onResume();
     }
     @Override
     protected void onStart(){
         doBindService();
+        Log.e("custom", "start");
         super.onStart();
      }
     @Override
     protected void onStop() {
+        Log.e("custom", "stop");
         doUnbindService();
         super.onStop();
     }
+
+    //################# SERVICE GLUE AND CONNECTIONS #################
+    public AudioplayerService getApService(){
+        return apService;
+    }
+
+    private ServiceConnection serviceConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            if(!serviceConnected){
+                apService = ((AudioplayerService.AudioplayerBinder)service).getService();
+                serviceConnected = true;
+                startup();
+            }
+            Log.e("custom", "service connected");
+        }
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            serviceConnected = false;
+            apService = null;
+            Log.e("custom", "service disconected");
+        }
+    };
     void doBindService(){
-        if(!serviceBound){
+        if(!serviceConnected){
             Intent serviceIntent = new Intent(pagerView.this, AudioplayerService.class);
             bindService(serviceIntent,serviceConnection,Context.BIND_ABOVE_CLIENT);
-            serviceBound=true;
         }
     }
     void doUnbindService() {
-        if (serviceBound) {
+        if (serviceConnected) {
+            serviceConnected = false;
             unbindService(serviceConnection);
-            serviceBound = false;
         }
     }
 
