@@ -64,8 +64,8 @@ public class AudioplayerService extends Service implements MediaPlayer.OnComplet
         ((CoreApplication)getApplication()).serviceStarted = false;
         this.stopForeground(true);
         this.stopSelf();
-        android.os.Process.killProcess(android.os.Process.myPid());
     }
+
     public class AudioplayerBinder extends Binder {
         public AudioplayerService getService(){
             return AudioplayerService.this;
@@ -85,8 +85,6 @@ public class AudioplayerService extends Service implements MediaPlayer.OnComplet
 
     @SuppressWarnings("deprecation")
     public void showNotification() {
-        CharSequence header;
-        CharSequence text;
         int drw ;
         if(mp.isPlaying()){
             String bookname = mp.book().name().trim();
@@ -105,23 +103,12 @@ public class AudioplayerService extends Service implements MediaPlayer.OnComplet
             notificationManager.notify(2345,noti);
         }
         else{
-
-            drw = R.drawable.pasue;
-
-            Notification noti = new Notification.Builder(this)
-                    .setContentTitle("Paused")
-                    .setContentText("")
-                    .setSmallIcon(drw)
-                    .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.icon))
-
-                    .setDeleteIntent(PendingIntent.getBroadcast(this, 0, new Intent(SOME_ACTION),0))
-                    .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, pagerView.class), 0))
-                    .build();
-            notificationManager.notify(2345,noti);
+            notificationManager.cancel(2345);
         }
     }
 
     public CustomMediaPlayer getMediaPlayer(){
+        Log.e("MEDIAPLAYER", mp.toString());
         return mp;
     }
     @Override
@@ -163,8 +150,6 @@ public class AudioplayerService extends Service implements MediaPlayer.OnComplet
         @Override
         public void onReceive(Context context, Intent intent) {
             save();
-            stopThisServiceNow();
-            android.os.Process.killProcess(android.os.Process.myPid());
         }
     }
 
