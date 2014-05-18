@@ -43,6 +43,8 @@ public class CustomMediaPlayer {
                 return true;
             }catch (IOException e){
                 currentBook = null;
+            }catch (NullPointerException e){
+                currentBook = null;
             }
         }
         return false;
