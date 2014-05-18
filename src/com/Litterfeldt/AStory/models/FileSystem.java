@@ -64,7 +64,11 @@ public class FileSystem {
             return bookPathList;
         }
     }
+    //Todo rewrite algorithm
     public Book mockBookFromPath(ArrayList<String> paths){
+        if(paths.size() < 1) {
+            return null;
+        }
         String firstPath = paths.get(0);
         mmr.setDataSource(firstPath);
         String bookName = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
@@ -83,6 +87,7 @@ public class FileSystem {
         }
         Book book = new Book(0,bookName,author,chapters,img);
         return book;
+
     }
 
     private Integer toInteger(String str) {
