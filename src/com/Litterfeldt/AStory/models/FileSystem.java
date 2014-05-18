@@ -82,6 +82,10 @@ public class FileSystem {
             String duration = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
             String chapterNum = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_CD_TRACK_NUMBER);
 
+            if(chapterNum == null) {
+                chapterNum = "" + paths.indexOf(s);
+            }
+
             Chapter c = new Chapter(0,s,toInteger(chapterNum), toInteger(duration));
             chapters.add(c);
         }
