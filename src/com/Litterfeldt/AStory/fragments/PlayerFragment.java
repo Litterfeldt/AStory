@@ -1,6 +1,7 @@
 package com.Litterfeldt.AStory.fragments;
 
 
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
@@ -244,7 +245,9 @@ public class PlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeL
     private void SetBackgroundAndTitle() {
         if(mp != null) {
             byte[] b = mp.book().image();
-            background.setImageDrawable(new BitmapDrawable(BitmapFactory.decodeByteArray(b, 0, b.length)));
+            if(b != null){
+                background.setImageDrawable(new BitmapDrawable(BitmapFactory.decodeByteArray(b, 0, b.length)));
+            }
             book.setText(mp.book().name());
             author.setText(mp.book().author());
             mp.setBackgroundToggle(true);
@@ -293,8 +296,8 @@ public class PlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeL
                 }
             }
             if (book != null){
-                mp.playBook(book,s.chapterId());
-                mp.seekTo(s.time_pos()-30);
+                mp.playBook(book, s.chapterId());
+                mp.seekTo(s.time_pos() - 30);
             }
             backgroundIsNotSet();
             play.setBackgroundResource(R.drawable.pasue);
