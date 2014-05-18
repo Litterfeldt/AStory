@@ -1,4 +1,8 @@
 .DS_Store
+*.class
+out/*
 .idea
 *.iml
 *.apk
+proguard_logs/*
+local.properties
