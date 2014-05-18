@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.Litterfeldt.AStory"
-          android:versionCode="3"
-          android:versionName="Even Better Beta">
+          android:versionCode="4"
+          android:versionName="Astrid">
     <uses-sdk android:minSdkVersion="16"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
@@ -18,7 +18,7 @@
         </activity>
         <service
             android:name=".services.AudioplayerService"
-            android:icon="@drawable/play"
+            android:icon="@drawable/playicon"
             android:label="@string/service_name"
             />
     </application>
