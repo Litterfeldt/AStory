@@ -10,6 +10,7 @@ public class Book {
     private ArrayList<Chapter> bookChapters;
     private int currentChapterIndex;
     private byte[] coverImage;
+    private int duration;
 
     public Book(int id, String name, String author, ArrayList<Chapter> chapterList, byte[] image){
         currentChapterIndex = 0;
@@ -18,6 +19,7 @@ public class Book {
         bookAuthor = author;
         bookChapters = chapterList;
         coverImage = image;
+        duration = 0;
     }
     public int id() {
         return bookId;
@@ -33,6 +35,22 @@ public class Book {
     }
     public int chapterCount(){
         return bookChapters.size();
+    }
+    public int getDuration(){
+        if (duration > 0) {
+            return duration;
+        }
+        for(Chapter c : bookChapters){
+            duration +=  c.Duration() ;
+        }
+        return duration;
+    }
+    public int getCurrentChapterDuration() {
+        int currentDuration = 0;
+        for (int i = 0; i<currentChapterIndex; i++){
+            currentDuration += bookChapters.get(i).Duration();
+        }
+        return currentDuration;
     }
     public boolean hasNextChapter(){
         return (currentChapterIndex<chapterCount());
