@@ -124,7 +124,10 @@ public class AudioplayerService extends Service implements MediaPlayer.OnComplet
             String bookname = mp.book().name().trim();
             String author = mp.book().author().trim();
             byte[] bitmapdata = mp.book().image();
-            Bitmap bitmap = BitmapFactory.decodeByteArray(bitmapdata , 0, bitmapdata.length);
+            Bitmap bitmap = Bitmap.createBitmap(1,1, Bitmap.Config.ARGB_8888);
+            if (bitmapdata != null) {
+                bitmap = BitmapFactory.decodeByteArray(bitmapdata, 0, bitmapdata.length);
+            }
 
             Notification noti = new Notification.Builder(this)
                     .setContentTitle("Playing " + bookname)
