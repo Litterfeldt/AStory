@@ -7,13 +7,13 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.Litterfeldt.AStory.R;
 import com.Litterfeldt.AStory.customClasses.CustomMediaPlayer;
-import com.Litterfeldt.AStory.dbConnector.dbSave;
 import com.Litterfeldt.AStory.models.Book;
 import com.Litterfeldt.AStory.models.SaveState;
 import com.Litterfeldt.AStory.pagerView;
@@ -38,6 +38,9 @@ public class PlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeL
     private Runnable mUpdateTimeTask;
     private Handler mHandler;
 
+    private AudioplayerService as;
+    private CustomMediaPlayer mp;
+
 
 
     @Override
@@ -50,11 +53,16 @@ public class PlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeL
     }
     @Override
     public void onPause() {
-
+        mHandler.removeCallbacks(mUpdateTimeTask);
         super.onPause();
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        Log.e("custom","creating fragment");
+        as = getService();
+        mp = getMediaPlayer();
+
         View view = inflater.inflate(R.layout.player, container, false);
         font = Typeface.createFromAsset(((pagerView) getActivity()).getAssets(), "font.ttf");
         book = (TextView) view.findViewById(R.id.titleheader);
@@ -109,9 +117,9 @@ public class PlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeL
             }
         });
 
-        if (getMediaPlayer().hasBook()) SetBackgroundAndTitle();
+        if (mp.hasBook()) SetBackgroundAndTitle();
 
-        if (!getMediaPlayer().isPlaying() && !getMediaPlayer().hasBook()){
+        if (!mp.isPlaying() && !mp.hasBook()){
             SaveState s = getSave();
             if (s != null ){
                 playSavedState(s);
@@ -121,7 +129,6 @@ public class PlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeL
         mHandler = new Handler();
         mUpdateTimeTask = new Runnable() {
             public void run() {
-                CustomMediaPlayer mp = getMediaPlayer();
                 if (mp != null){
                     if (mp.hasBook()){
                         long totalDuration = mp.getDuration();
@@ -143,7 +150,7 @@ public class PlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeL
                         }else{
                             play.setBackgroundResource(R.drawable.play);
                         }
-                        mHandler.postDelayed(this, 500);
+                        mHandler.postDelayed(this, 1000);
                     }else{
                         backgroundIsNotSet();
                         book.setText("Swipe Right");
@@ -159,7 +166,6 @@ public class PlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeL
     }
     //--- PLAYER CONTROLS ---
     private void pushedPlay() {
-        CustomMediaPlayer mp = getMediaPlayer();
         if (mp != null){
             if(mp.isPlaying()){
                 mp.pause();
@@ -167,14 +173,13 @@ public class PlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeL
             }else if(mp.hasBook()){
                 mp.start();
             }
-            getService().showNotification();
+            as.showNotification();
         }
     }
     private void pushedShortBackSkipp(int skipp) {
-        CustomMediaPlayer mp = getMediaPlayer();
         if(mp != null){
             int currentPos = mp.getCurrentPosition();
-            if (currentPos - skipp >= mp.getDuration()) {
+            if (currentPos - skipp > skipp) {
                mp.seekTo(currentPos - skipp);
             } else {
                 mp.seekTo(0);
@@ -182,7 +187,6 @@ public class PlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeL
         }
     }
     private void pushedShortForwardSkipp(int skipp) {
-        CustomMediaPlayer mp = getMediaPlayer();
         if(mp != null){
             int currentPos = mp.getCurrentPosition();
             if (currentPos + skipp <= mp.getDuration()) {
@@ -194,11 +198,11 @@ public class PlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeL
     }
 
     private void findnext() {
-        getService().nextChapter();
+        as.nextChapter();
         backgroundIsNotSet();
     }
     private void findprev() {
-        getService().previousChapter();
+        as.previousChapter();
     }
 
     //--- UI HELPER METHODS ---
@@ -228,16 +232,17 @@ public class PlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeL
         return buf.toString();
     }
     private void SetBackgroundAndTitle() {
-        CustomMediaPlayer mp = getMediaPlayer();
-        byte[] b = mp.book().image();
-        background.setImageDrawable(new BitmapDrawable(BitmapFactory.decodeByteArray(b, 0, b.length)));
-        book.setText(mp.book().name());
-        author.setText(mp.book().author());
-        mp.setBackgroundToggle(true);
+        if(mp != null) {
+            byte[] b = mp.book().image();
+            background.setImageDrawable(new BitmapDrawable(BitmapFactory.decodeByteArray(b, 0, b.length)));
+            book.setText(mp.book().name());
+            author.setText(mp.book().author());
+            mp.setBackgroundToggle(true);
+        }
     }
     @Override
     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-        if (b) { getMediaPlayer().seekTo(i);}
+        if (b) { mp.seekTo(i);}
     }
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
@@ -252,28 +257,23 @@ public class PlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeL
     }
 
     private boolean isBackgroundSet(){
-        return getMediaPlayer().getBackgroundToggle();
+        return mp.getBackgroundToggle();
     }
     private void backgroundIsNotSet(){
-        getMediaPlayer().setBackgroundToggle(false);
+        mp.setBackgroundToggle(false);
     }
 
 
     //Service-Glue goes here
     private AudioplayerService getService(){
-        try{
-            return ((pagerView) getActivity()).apService;
-        }catch (Exception Ignored){} return null;
+      return ((pagerView) getActivity()).getApService();
     }
     private CustomMediaPlayer getMediaPlayer(){
-        try{
-            return getService().getMediaPlayer();
-        }catch (Exception Ignored){} return null;
+       return getService().getMediaPlayer();
     }
 
     //--- SAVE STATE CODE ---
     private void playSavedState(SaveState s) {
-        AudioplayerService as = getService();
         if (s != null && as != null) {
             Book book = null;
             for (Book b : as.getBookList()){
@@ -283,17 +283,17 @@ public class PlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeL
                 }
             }
             if (book != null){
-                getMediaPlayer().playBook(book,s.chapterId());
-                getMediaPlayer().seekTo(s.time_pos());
+                mp.playBook(book,s.chapterId());
+                mp.seekTo(s.time_pos()-30);
             }
             backgroundIsNotSet();
             play.setBackgroundResource(R.drawable.pasue);
         }
     }
     private void save(){
-        getService().save();
+        as.save();
     }
     private SaveState getSave(){
-        return getService().getSave();
+        return as.getSave();
     }
 }
