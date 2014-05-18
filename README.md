@@ -40,9 +40,11 @@ any android device that meets above stated criteria.
 ##Coming release
 * Playback control via headset button(s)
 * Playback control via notification
-* Improved design for notifications
+* ~~Improved design for notifications~~
 
 ##Last release brought
+* Improved design for notifications
+* Improved UI information.
 * Fix booklist (must stop being so lazy)
 * Improved algorithm for populating book library
 * Improve overall performance (It's good but could be great)
