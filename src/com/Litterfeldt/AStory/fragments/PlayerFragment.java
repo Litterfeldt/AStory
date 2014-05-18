@@ -221,12 +221,14 @@ public class PlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeL
         progressBar.setVisibility(View.GONE);
         timeleft.setVisibility(View.GONE);
         timegone.setVisibility(View.GONE);
+        chapterCount.setVisibility(View.GONE);
     }
     private void showPlayerControls(){
         processbar.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.VISIBLE);
         timeleft.setVisibility(View.VISIBLE);
         timegone.setVisibility(View.VISIBLE);
+        chapterCount.setVisibility(View.VISIBLE);
     }
     private String getTimeString(long millis) {
         StringBuilder buf = new StringBuilder();
