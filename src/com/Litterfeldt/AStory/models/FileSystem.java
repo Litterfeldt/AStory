@@ -2,6 +2,7 @@ package com.Litterfeldt.AStory.models;
 
 import android.media.MediaMetadataRetriever;
 import android.os.Environment;
+import android.util.Log;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -74,9 +75,28 @@ public class FileSystem {
         Collections.sort(paths);
         String firstPath = paths.get(0);
         mmr.setDataSource(firstPath);
+
         String bookName = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
-        if (bookName == null || bookName == ""){ return null;}
+        if (bookName == null || bookName == ""){
+            bookName = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
+        }
+        if (bookName == null || bookName == ""){
+            bookName = firstPath.substring(firstPath.lastIndexOf("/")+1,firstPath.lastIndexOf(".")).replaceAll("[^a-zA-Z ]", "").trim();
+        }
+        if (bookName == null || bookName == ""){
+            return null;
+        }
+
         String author = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
+        if (author == null || author == ""){
+            author = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_WRITER);
+        }
+        if (author == null || author == ""){
+            author = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_AUTHOR);
+        }
+        if (author == null || author == ""){
+            author = "Unknown Author";
+        }
         byte[] img = mmr.getEmbeddedPicture();
 
         ArrayList<Chapter> chapters = new ArrayList<Chapter>();
