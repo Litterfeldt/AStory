@@ -10,12 +10,14 @@ import android.content.Context;
 import android.content.Intent;
 
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.IBinder;
 
+import android.provider.ContactsContract;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import com.Litterfeldt.AStory.R;
 import com.Litterfeldt.AStory.dbConnector.dbBook;
@@ -36,6 +38,8 @@ public class AudioplayerService extends Service implements MediaPlayer.OnComplet
     private CustomMediaPlayer mp;
     private NotificationManager notificationManager;
     private final String SOME_ACTION = "com.Litterfeldt.AStory.services";
+    private PhoneStateListener phoneStateListener;
+    private TelephonyManager mgr;
 
 
     @Override
@@ -46,8 +50,41 @@ public class AudioplayerService extends Service implements MediaPlayer.OnComplet
         notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         this.registerReceiver(new KillBroadcastReceiver(), new IntentFilter(SOME_ACTION));
         showNotification();
+        phoneStateListener = new PhoneStateListener() {
+            @Override
+            public void onCallStateChanged(int state, String incomingNumber) {
+                if(mp.hasBook()) {
+                    if (state == TelephonyManager.CALL_STATE_RINGING) {
+                        //Incoming call: Pause music
+                        if(mp.isPlaying()){
+                            mp.pause();
+                        }
+                    } else if (state == TelephonyManager.CALL_STATE_IDLE) {
+                        //Not in call: Play music
+                        if(!mp.isPlaying()){
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            mp.start();
+                        }
+                    } else if (state == TelephonyManager.CALL_STATE_OFFHOOK) {
+                        //A call is dialing, active or on hold
+                        if(mp.isPlaying()){
+                            mp.pause();
+                        }
+                    }
+                    showNotification();
+                }
+                super.onCallStateChanged(state, incomingNumber);
+            }
+        };
+        mgr = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+        if(mgr != null) {
+            mgr.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
+        }
     }
-
 
     //--- SERVICE MANAGEMENT ---
     @Override
