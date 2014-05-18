@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.os.Binder;
@@ -122,18 +123,17 @@ public class AudioplayerService extends Service implements MediaPlayer.OnComplet
 
     @SuppressWarnings("deprecation")
     public void showNotification() {
-        int drw ;
         if(mp.isPlaying()){
             String bookname = mp.book().name().trim();
             String author = mp.book().author().trim();
-            drw = R.drawable.play;
+            byte[] bitmapdata = mp.book().image();
+            Bitmap bitmap = BitmapFactory.decodeByteArray(bitmapdata , 0, bitmapdata.length);
 
             Notification noti = new Notification.Builder(this)
                     .setContentTitle("Playing " + bookname)
                     .setContentText(author)
-                    .setSmallIcon(drw)
-                    .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.icon))
-
+                    .setLargeIcon(bitmap)
+                    .setSmallIcon(R.drawable.play)
                     .setDeleteIntent(PendingIntent.getBroadcast(this, 0, new Intent(SOME_ACTION), 0))
                     .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, pagerView.class), 0))
                     .build();
