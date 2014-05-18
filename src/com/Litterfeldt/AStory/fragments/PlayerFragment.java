@@ -33,6 +33,7 @@ public class PlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeL
 
     private SeekBar processbar;
     private ImageView background;
+    private TextView chapterCount;
     private TextView timegone;
     private TextView timeleft;
     private Runnable mUpdateTimeTask;
@@ -69,6 +70,7 @@ public class PlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeL
         author = (TextView) view.findViewById(R.id.subheader);
         timeleft = (TextView) view.findViewById(R.id.timeleft);
         timegone = (TextView) view.findViewById(R.id.timegone);
+        chapterCount = (TextView) view.findViewById(R.id.chaptercount);
 
         back = (TextView) view.findViewById(R.id.thirtySBack);
         forward = (TextView) view.findViewById(R.id.thirtySForward);
@@ -83,6 +85,7 @@ public class PlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeL
         author.setTypeface(font);
         timeleft.setTypeface(font);
         timegone.setTypeface(font);
+        chapterCount.setTypeface(font);
 
         processbar.setOnSeekBarChangeListener(this);
 
@@ -131,20 +134,27 @@ public class PlayerFragment extends Fragment implements SeekBar.OnSeekBarChangeL
             public void run() {
                 if (mp != null){
                     if (mp.hasBook()){
-                        long totalDuration = mp.getDuration();
+                        Book book = mp.book();
+                        long totalBookDuration = book.getDuration();
+                        long currentBookDuration = book.getCurrentChapterDuration() + mp.getCurrentPosition();
+
+                        long chapterDuration = mp.getDuration();
                         long currentDuration = mp.getCurrentPosition();
-                        processbar.setMax((int) totalDuration);
+
+                        processbar.setMax((int) chapterDuration);
                         processbar.setProgress((int) currentDuration);
-                        progressBar.setMax((int) totalDuration);
-                        progressBar.setProgress((int) currentDuration);
-                        processbar.setProgress((int)currentDuration);
+                        progressBar.setMax((int) totalBookDuration);
+                        progressBar.setProgress((int) currentBookDuration);
+
+                        chapterCount.setText(book.currentChapterIndex()+1 + "/" + book.chapterCount());
+
                         if (!isBackgroundSet()) {
                             SetBackgroundAndTitle();
                         }
                         showPlayerControls();
                         if (mp.isPlaying()){
-                            timegone.setText("" + getTimeString(currentDuration));
-                            timeleft.setText("" + getTimeString(totalDuration - currentDuration));
+                            timegone.setText("" + getTimeString(currentBookDuration));
+                            timeleft.setText("" + getTimeString(totalBookDuration - currentBookDuration));
 
                             play.setBackgroundResource(R.drawable.pasue);
                         }else{
