@@ -11,7 +11,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.View;
 import com.Litterfeldt.AStory.fragments.LibraryFragment;
 import com.Litterfeldt.AStory.fragments.PlayerFragment;
@@ -28,7 +27,6 @@ public class pagerView extends FragmentActivity {
         mAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager());
         mPager = (ViewPager) findViewById(R.id.viewpager);
         mPager.setAdapter(mAdapter);
-        Log.e("custom","startup method");
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,7 +37,6 @@ public class pagerView extends FragmentActivity {
     protected void onPause() {
         doUnbindService();
         finish();
-        Log.e("custom", "pause");
         super.onPause();
     }
     @Override
@@ -49,18 +46,15 @@ public class pagerView extends FragmentActivity {
         }else{
             doBindService();
         }
-        Log.e("custom", "resume");
         super.onResume();
     }
     @Override
     protected void onStart(){
         doBindService();
-        Log.e("custom", "start");
         super.onStart();
      }
     @Override
     protected void onStop() {
-        Log.e("custom", "stop");
         doUnbindService();
         super.onStop();
     }
@@ -79,13 +73,11 @@ public class pagerView extends FragmentActivity {
                 serviceConnected = true;
                 startup();
             }
-            Log.e("custom", "service connected");
         }
         @Override
         public void onServiceDisconnected(ComponentName name) {
             serviceConnected = false;
             apService = null;
-            Log.e("custom", "service disconected");
         }
     };
     void doBindService(){

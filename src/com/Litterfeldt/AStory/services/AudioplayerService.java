@@ -18,7 +18,6 @@ import android.os.IBinder;
 
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import com.Litterfeldt.AStory.R;
 import com.Litterfeldt.AStory.dbConnector.dbBook;
 import com.Litterfeldt.AStory.dbConnector.dbSave;
@@ -89,7 +88,6 @@ public class AudioplayerService extends Service implements MediaPlayer.OnComplet
     //--- SERVICE MANAGEMENT ---
     @Override
     public int onStartCommand(Intent intent, int flags, int startID){
-        Log.w("LocalService", "Received start id " + startID + ": " + intent);
         if(!((CoreApplication) getApplication()).serviceStarted){
             onCreate();
         }
@@ -144,7 +142,6 @@ public class AudioplayerService extends Service implements MediaPlayer.OnComplet
     }
 
     public CustomMediaPlayer getMediaPlayer(){
-        Log.e("MEDIAPLAYER", mp.toString());
         return mp;
     }
     @Override
