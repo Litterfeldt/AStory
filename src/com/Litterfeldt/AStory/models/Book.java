@@ -66,12 +66,20 @@ public class Book {
         return getChapter(currentChapterIndex);
     }
     public Chapter prevChapter(){
-        currentChapterIndex--;
-        return getChapter(currentChapterIndex);
+        if (hasPreviousChapter()) {
+            currentChapterIndex--;
+            return getChapter(currentChapterIndex);
+        } else {
+            return null;
+        }
     }
     public Chapter getChapter(int chapterIndex){
-        currentChapterIndex = chapterIndex;
-        return bookChapters.get(chapterIndex);
+        if (hasNextChapter()) {
+            currentChapterIndex = chapterIndex;
+            return bookChapters.get(chapterIndex);
+        }else {
+            return null;
+        }
     }
     public byte[] image(){
         return coverImage;
